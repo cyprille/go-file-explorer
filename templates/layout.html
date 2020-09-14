@@ -13,7 +13,7 @@
         <link rel="stylesheet" type="text/css" href="/static/css/font-awesome-4.0.3/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="/static/css/app.css">
 
-        <title>Go Web Skeleton</title>
+        <title>Go File Explorer</title>
     </head>
     <body>
         <div class="container">
@@ -22,17 +22,16 @@
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                         <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">Go Website Skeleton</a>
+                    <a class="navbar-brand" href="/">Go File Explorer</a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li class="{{if eq .Title "home"}}active{{end}}"><a href="/">Home</a></li>
-                        <li class="{{if eq .Title "user_home"}}active{{end}}"><a href="/user">User</a></li>
+                        <li class="{{if eq .Title "directory_home"}}active{{end}}"><a href="/directory">Directories</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">Blank</a></li>
-                        <li><a target="_blank" href="https://github.com/jadekler/go-file-explorer">Site Code</a></li>
+                        <li><a target="_blank" href="https://github.com/cyprille/go-file-explorer">Credits</a></li>
                     </ul>
                 </div>
             </nav>

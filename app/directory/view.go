@@ -1,4 +1,4 @@
-package user
+package directory
 
 import (
     "net/http"
@@ -12,18 +12,18 @@ import (
 func GetViewPage(rw http.ResponseWriter, req *http.Request) {
     type Page struct {
         Title  string
-        UserId string
+        DirectoryId string
     }
 
     params := mux.Vars(req)
-    userId := params["id"]
+    directoryId := params["id"]
 
     p := Page{
-        Title:  "user_view",
-        UserId: userId,
+        Title: "directory_view",
+        DirectoryId: directoryId,
     }
 
-    common.Templates = template.Must(template.ParseFiles("templates/user/view.html", common.LayoutPath))
+    common.Templates = template.Must(template.ParseFiles("templates/directory/view.html", common.LayoutPath))
     err := common.Templates.ExecuteTemplate(rw, "base", p)
     common.CheckError(err, 2)
 }

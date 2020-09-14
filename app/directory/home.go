@@ -1,4 +1,4 @@
-package user
+package directory
 
 import (
     "net/http"
@@ -13,10 +13,10 @@ func GetHomePage(rw http.ResponseWriter, req *http.Request) {
     }
 
     p := Page{
-        Title: "user_home",
+        Title: "directory_home",
     }
 
-    common.Templates = template.Must(template.ParseFiles("templates/user/home.html", common.LayoutPath))
+    common.Templates = template.Must(template.ParseFiles("templates/directory/home.html", common.LayoutPath))
     err := common.Templates.ExecuteTemplate(rw, "base", p)
     common.CheckError(err, 2)
 }

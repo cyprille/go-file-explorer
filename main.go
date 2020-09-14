@@ -8,7 +8,7 @@ import (
 
     "go-file-explorer/app/common"
     "go-file-explorer/app/home"
-    "go-file-explorer/app/user"
+    "go-file-explorer/app/directory"
 
     "github.com/golang/glog"
     "github.com/gorilla/mux"
@@ -22,10 +22,10 @@ func main() {
     http.Handle("/", httpInterceptor(router))
 
     router.HandleFunc("/", home.GetHomePage).Methods("GET")
-    router.HandleFunc("/user{_:/?}", user.GetHomePage).Methods("GET")
+    router.HandleFunc("/directory{_:/?}", directory.GetHomePage).Methods("GET")
 
-    router.HandleFunc("/user/view/{id:[0-9]+}", user.GetViewPage).Methods("GET")
-    router.HandleFunc("/user/{id:[0-9]+}", user.GetViewPage).Methods("GET")
+    router.HandleFunc("/directory/view/{id:[0-9]+}", directory.GetViewPage).Methods("GET")
+    router.HandleFunc("/directory/{id:[0-9]+}", directory.GetViewPage).Methods("GET")
 
     fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
     http.Handle("/static/", fileServer)
