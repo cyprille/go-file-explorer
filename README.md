@@ -1,4 +1,4 @@
-git-go-websiteskeleton
+Go File Explorer
 ===============
 
 A basic website skeleton in Go that comes with the Gorilla
