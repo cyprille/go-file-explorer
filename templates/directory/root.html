@@ -1,0 +1,15 @@
+{{define "body"}}
+    Current directory : "root".
+
+    <br><br>
+
+	<a href="directory/..">0 - ../</a>
+	<br>
+
+	{{range $index, $directory := .Directories}}
+		<a href="directory/{{$directory}}">{{$index}} - {{$directory}}</a>
+		<br>
+	{{end}}
+
+	<br>
+{{end}}

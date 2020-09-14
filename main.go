@@ -22,7 +22,8 @@ func main() {
     http.Handle("/", httpInterceptor(router))
 
     router.HandleFunc("/", home.GetHomePage).Methods("GET")
-    router.HandleFunc("/directory{_:/?}", directory.GetHomePage).Methods("GET")
+    // router.HandleFunc("/directory{_:/?}", directory.GetHomePage).Methods("GET")
+    router.HandleFunc("/directory{_:/?}", directory.GetDirectories).Methods("GET")
 
     router.HandleFunc("/directory/view/{id:[0-9]+}", directory.GetViewPage).Methods("GET")
     router.HandleFunc("/directory/{id:[0-9]+}", directory.GetViewPage).Methods("GET")
