@@ -6,9 +6,9 @@ import (
     "net/http"
     "time"
 
-    "git-go-websiteskeleton/app/common"
-    "git-go-websiteskeleton/app/home"
-    "git-go-websiteskeleton/app/user"
+    "go-file-explorer/app/common"
+    "go-file-explorer/app/home"
+    "go-file-explorer/app/user"
 
     "github.com/golang/glog"
     "github.com/gorilla/mux"

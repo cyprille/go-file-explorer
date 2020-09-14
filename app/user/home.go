@@ -3,8 +3,8 @@ package user
 import (
     "net/http"
     "html/template"
-    
-    "git-go-websiteskeleton/app/common"
+
+    "go-file-explorer/app/common"
 )
 
 func GetHomePage(rw http.ResponseWriter, req *http.Request) {
