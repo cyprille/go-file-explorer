@@ -4,7 +4,7 @@
 
 Based on https://github.com/jadekler/git-go-websiteskeleton.
 
-## Run app
+## Run the application
 
 Just go to the project root directory and run the app
 ``go run main.go``
