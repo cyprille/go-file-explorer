@@ -7,7 +7,6 @@ import (
     "time"
 
     "go-file-explorer/app/common"
-    "go-file-explorer/app/home"
     "go-file-explorer/app/directory"
 
     "github.com/golang/glog"
@@ -21,12 +20,7 @@ func main() {
     router := mux.NewRouter()
     http.Handle("/", httpInterceptor(router))
 
-    router.HandleFunc("/", home.GetHomePage).Methods("GET")
-    // router.HandleFunc("/directory{_:/?}", directory.GetHomePage).Methods("GET")
-    router.HandleFunc("/directory{_:/?}", directory.GetDirectories).Methods("GET")
-
-    router.HandleFunc("/directory/view/{id:[0-9]+}", directory.GetViewPage).Methods("GET")
-    router.HandleFunc("/directory/{id:[0-9]+}", directory.GetViewPage).Methods("GET")
+    router.HandleFunc("/", root.GetDirectories).Methods("GET")
 
     fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
     http.Handle("/static/", fileServer)
