@@ -2,7 +2,8 @@
 
 ## Introduction
 
-Based on https://github.com/jadekler/git-go-websiteskeleton.
+This tool provides you a very lightweight interface to navigate through a file system.
+It was developed to provide a UI to a NAS project running on a Raspberry Pi.
 
 ## Run the application
 
