@@ -1,54 +1,67 @@
+/*
+ * Project: Go File Explorer
+ * File: main.go
+ * ---
+ * Created: 4/11/2020
+ * Author: Cyprille Chauvry
+ * ---
+ * License: MIT License
+ * Copyright © 2020 Cyprille Chauvry
+ */
+
 package main
 
 import (
-    "fmt"
-    "flag"
-    "net/http"
-    "time"
+	"flag"
+	"fmt"
+	"net/http"
+	"time"
 
-    "go-file-explorer/app/common"
-    "go-file-explorer/app/directory"
+	common "go-file-explorer/app/common"
+	directory "go-file-explorer/app/directory"
 
-    "github.com/golang/glog"
-    "github.com/gorilla/mux"
+	"github.com/golang/glog"
+	"github.com/gorilla/mux"
 )
 
+// main Boostraps the app
 func main() {
-    flag.Parse()
-    defer glog.Flush()
+	flag.Parse()
+	defer glog.Flush()
 
-    router := mux.NewRouter()
-    http.Handle("/", httpInterceptor(router))
+	router := mux.NewRouter()
+	http.Handle("/", httpInterceptor(router))
 
-    router.HandleFunc("/", root.GetDirectories).Methods("GET")
+	router.HandleFunc("/", directory.GetDirectories).Methods("GET")
 
-    fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
-    http.Handle("/static/", fileServer)
+	fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
+	http.Handle("/static/", fileServer)
 
-    err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
 
-    if err != nil {
-        fmt.Println(err)
-    }
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
+// httpInterceptor Handles the application routing
 func httpInterceptor(router http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-        startTime := time.Now()
+	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		startTime := time.Now()
 
-        router.ServeHTTP(w, req)
+		router.ServeHTTP(w, req)
 
-        finishTime := time.Now()
-        elapsedTime := finishTime.Sub(startTime)
+		finishTime := time.Now()
+		elapsedTime := finishTime.Sub(startTime)
 
-        switch req.Method {
-        case "GET":
-            // We may not always want to StatusOK, but for the sake of
-            // this example we will
-            common.LogAccess(w, req, elapsedTime)
-        case "POST":
-            // here we might use http.StatusCreated
-        }
+		switch req.Method {
+		case "GET":
+			// We may not always want to StatusOK, but for the sake of
+			// this example we will
+			common.LogAccess(w, req, elapsedTime)
+		case "POST":
+			// here we might use http.StatusCreated
+		}
 
-    })
+	})
 }
