@@ -18,7 +18,7 @@ import (
 	"time"
 
 	common "go-file-explorer/app/common"
-	directory "go-file-explorer/app/directory"
+	handler "go-file-explorer/app/handler"
 
 	"github.com/golang/glog"
 	"github.com/gorilla/mux"
@@ -29,10 +29,10 @@ func main() {
 	flag.Parse()
 	defer glog.Flush()
 
-	router := mux.NewRouter()
-	http.Handle("/", httpInterceptor(router))
-
-	router.HandleFunc("/", directory.GetDirectories).Methods("GET")
+	r := mux.NewRouter()
+	r.HandleFunc("/", handler.Home)
+	r.HandleFunc("/?child={key}", handler.Home)
+	http.Handle("/", r)
 
 	fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
 	http.Handle("/static/", fileServer)

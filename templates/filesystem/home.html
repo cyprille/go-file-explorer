@@ -3,13 +3,15 @@
 
     <br><br>
 
-	<a class="folder" href="directory/..">
+	<a class="folder" href="../">
 		<i class="fas fa-chevron-left"></i>&nbsp;Previous
 	</a>
 	<br><br>
 
+	{{ $dir := .CurrentDirectory }}
+
 	{{range $item := .Items}}
-		<a class="" href="directory/{{$item}}"><i class="fas fa-folder"></i>&nbsp;{{$item}}</a>
+		<a class="" href="/?child={{$item}}"><i class="fas fa-folder"></i>&nbsp;{{$item}}</a>
 		<br>
 	{{end}}
 
