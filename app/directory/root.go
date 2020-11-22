@@ -22,34 +22,27 @@ import (
 
 // GetDirectories returns the root directories
 func GetDirectories(rw http.ResponseWriter, req *http.Request) {
+	var currentDirectory = "/Users/cyprillechauvry/workspace/"
+
 	type Page struct {
 		Title            string
-		Directories      []string
+		Items            []string
 		CurrentDirectory string
 	}
 
-	files, error := ioutil.ReadDir(".")
+	files, error := ioutil.ReadDir(currentDirectory)
 	if error != nil {
 		log.Fatal(error)
 	}
 
-	var directories = []string{}
+	var items = []string{}
 	for _, f := range files {
-		directories = append(directories, f.Name())
+		items = append(items, f.Name())
 	}
-
-	// var directories = map[int]string{}
-	// for i, f := range files {
-	// 	directories = append(directories, i, f.Name())
-	// }
-
-	// fmt.Print(directories)
-
-	var currentDirectory = "/Users/cyprillechauvry/workspace/"
 
 	p := Page{
 		Title:            "directory_root",
-		Directories:      directories,
+		Items:            items,
 		CurrentDirectory: currentDirectory,
 	}
 

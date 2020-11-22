@@ -1,13 +1,15 @@
 {{define "body"}}
-	<i class="fas fa-home"></i>&nbsp;{{.CurrentDirectory}}
+	<i class="fas fa-folder-open"></i>&nbsp;{{.CurrentDirectory}}
 
     <br><br>
 
-	<a href="directory/..">0 - ../</a>
-	<br>
+	<a class="folder" href="directory/..">
+		<i class="fas fa-chevron-left"></i>&nbsp;Previous
+	</a>
+	<br><br>
 
-	{{range $index, $directory := .Directories}}
-		<a href="directory/{{$directory}}">{{$index}} - {{$directory}}</a>
+	{{range $item := .Items}}
+		<a class="" href="directory/{{$item}}"><i class="fas fa-folder"></i>&nbsp;{{$item}}</a>
 		<br>
 	{{end}}
 
