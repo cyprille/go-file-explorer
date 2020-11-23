@@ -30,8 +30,7 @@ func main() {
 	defer glog.Flush()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", handler.Home)
-	r.HandleFunc("/?child={key}", handler.Home)
+	r.HandleFunc("/", handler.GetHome)
 	http.Handle("/", r)
 
 	fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
@@ -56,11 +55,10 @@ func httpInterceptor(router http.Handler) http.Handler {
 
 		switch req.Method {
 		case "GET":
-			// We may not always want to StatusOK, but for the sake of
-			// this example we will
+			// We may not always want to Status ok, but for this example we will
 			common.LogAccess(w, req, elapsedTime)
 		case "POST":
-			// here we might use http.StatusCreated
+			// We might use http.StatusCreated here
 		}
 
 	})

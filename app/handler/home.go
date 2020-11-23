@@ -12,36 +12,52 @@
 package handler
 
 import (
+	"fmt"
 	"go-file-explorer/app/api/filesystem"
 	"go-file-explorer/app/common"
 	"html/template"
 	"net/http"
 )
 
-// Home Responds to the home path call
-func Home(rw http.ResponseWriter, req *http.Request) {
-	var rootDir = "/Users/cyprillechauvry/workspace"
-	var path = ""
+// Page struct to define templates content
+type Page struct {
+	Title            string
+	Items            []string
+	CurrentDirectory string
+}
 
-	if len(req.URL.Query()["child"]) > 0 {
-		path = req.URL.Query()["child"][0]
+// Base directory chroot
+const rootDir = "/Users/cyprillechauvry/workspace"
+
+// Current work directory
+var workDir = rootDir
+
+// GetHome Handles the response from the home path call
+func GetHome(rw http.ResponseWriter, req *http.Request) {
+	// Retrieves the "child" URI parameter
+	var child = req.URL.Query()["child"]
+
+	// Retrieves the path if we passed a child param to navigate to
+	if len(child) > 0 {
+		workDir = workDir + "/" + child[0]
 	}
 
-	var items, currentDir = filesystem.GetPathContent(rootDir, path)
+	fmt.Print("\nDump: ", workDir, "\n")
 
-	type Page struct {
-		Title            string
-		Items            []string
-		CurrentDirectory string
-	}
+	// Retrieves the content list
+	var items = filesystem.GetPathContent(workDir)
 
+	// Defines the page
 	p := Page{
 		Title:            "Home",
 		Items:            items,
-		CurrentDirectory: currentDir,
+		CurrentDirectory: workDir,
 	}
 
+	// Renders the template
 	common.Templates = template.Must(template.ParseFiles("templates/filesystem/home.html", common.LayoutPath))
+
+	// Handles errors
 	err := common.Templates.ExecuteTemplate(rw, "base", p)
 	common.CheckError(err, 2)
 }
