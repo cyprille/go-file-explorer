@@ -30,7 +30,7 @@ func main() {
 	defer glog.Flush()
 
 	r := mux.NewRouter()
-	r.HandleFunc(`/api/navigation/{rest:[a-zA-Z0-9=\-\/]+}`, handler.GoNext)
+	r.HandleFunc(`/api/navigation/{rest:[a-zA-Z0-9=\-\/]+}`, handler.GoToPath)
 	r.HandleFunc(`/api/navigation/`, handler.GoHome)
 	r.HandleFunc(`/api/`, handler.GoHome)
 	r.HandleFunc(`/`, handler.GoHome)

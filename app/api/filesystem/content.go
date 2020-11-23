@@ -17,6 +17,7 @@ import (
 
 // rootDir is the base directory chroot constant
 // @TODO: refacto to handle this in project parameters
+// @TODO: Improve this to handle files openning and 404 otherwise
 const rootDir = "/Users/cyprillechauvry/workspace/"
 
 // GetPathContent Returns the list of files and directories in the given rootDir/path

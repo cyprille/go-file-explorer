@@ -37,20 +37,20 @@ var previousEnabled = false
 // GoHome handles the response from the home path call
 func GoHome(rw http.ResponseWriter, req *http.Request) {
 	// Calls the navigation
-	Navigate(rw, "./")
+	navigate(rw, "./")
 }
 
-// GoNext handles the response from a path call
-func GoNext(rw http.ResponseWriter, req *http.Request) {
+// GoToPath handles the response from a path call
+func GoToPath(rw http.ResponseWriter, req *http.Request) {
 	// Retrieves the link by removing the "/api/navigation/" prefix
 	path = strings.TrimPrefix(req.RequestURI, "/api/navigation/")
 
 	// Calls the navigation
-	Navigate(rw, path)
+	navigate(rw, path)
 }
 
-// Navigate displays the content of the given path parameter
-func Navigate(rw http.ResponseWriter, path string) {
+// navigate displays the content of the given path parameter
+func navigate(rw http.ResponseWriter, path string) {
 	// Handles the possibility to go previous or not depending on current path
 	if path == "./" || path == "." {
 		previousEnabled = false
