@@ -30,7 +30,6 @@ func main() {
 	defer glog.Flush()
 
 	r := mux.NewRouter()
-	r.HandleFunc(`/api/action/back`, handler.GoBack)
 	r.HandleFunc(`/api/navigation/{rest:[a-zA-Z0-9=\-\/]+}`, handler.GoNext)
 	r.HandleFunc(`/api/navigation/`, handler.GoHome)
 	r.HandleFunc(`/api/`, handler.GoHome)
@@ -40,6 +39,7 @@ func main() {
 	fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
 	http.Handle("/static/", fileServer)
 
+	// @TODO: refacto to handle this in project parameters
 	err := http.ListenAndServe(":8080", nil)
 
 	if err != nil {

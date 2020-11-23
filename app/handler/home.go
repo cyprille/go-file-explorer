@@ -16,7 +16,6 @@ import (
 	"go-file-explorer/app/common"
 	"html/template"
 	"net/http"
-	"path/filepath"
 	"strings"
 )
 
@@ -39,18 +38,6 @@ var previousEnabled = false
 func GoHome(rw http.ResponseWriter, req *http.Request) {
 	// Calls the navigation
 	Navigate(rw, "./")
-}
-
-// GoBack handles the response from the back path call
-func GoBack(rw http.ResponseWriter, req *http.Request) {
-	// Appends the return signal to the current working directory
-	path = path + "../"
-
-	// Cleans the path to interpret the return signal "../"
-	path = filepath.Clean(path)
-
-	// Calls the navigation
-	Navigate(rw, path)
 }
 
 // GoNext handles the response from a path call
