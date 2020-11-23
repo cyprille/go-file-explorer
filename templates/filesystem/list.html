@@ -1,0 +1,19 @@
+{{define "body"}}
+	<i class="fas fa-folder-open"></i>&nbsp;{{.WorkingDirectory}}
+
+    <br><br>
+
+	{{if .PreviousEnabled}}
+		<a class="folder" href="/api/action/back">
+			<i class="fas fa-chevron-left"></i>&nbsp;Previous
+		</a>
+		<br><br>
+	{{end}}
+
+	{{range $item := .Items}}
+		<a class="" href="/api/navigation/{{$item}}"><i class="fas fa-folder"></i>&nbsp;{{$item}}</a>
+		<br>
+	{{end}}
+
+	<br>
+{{end}}

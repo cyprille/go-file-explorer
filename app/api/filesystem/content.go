@@ -25,7 +25,7 @@ func GetPathContent(path string) []string {
 	}
 
 	// Stores the data in an array
-	var items = []string{}
+	items := []string{}
 	for _, f := range files {
 		items = append(items, f.Name())
 	}

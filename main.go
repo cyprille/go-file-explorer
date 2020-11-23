@@ -30,7 +30,9 @@ func main() {
 	defer glog.Flush()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", handler.GetHome)
+	r.HandleFunc("/api/action/back", handler.GoBack)
+	r.HandleFunc("/api/navigation/{*}", handler.GoNext)
+	r.HandleFunc("/", handler.GoHome)
 	http.Handle("/", r)
 
 	fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))

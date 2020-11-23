@@ -20,36 +20,58 @@ import (
 	"strings"
 )
 
-// Page struct to define templates content
+// Base directory chroot constant
+// @TODO: refacto to handle this in project parameters
+const rootDir = "/Users/cyprillechauvry/workspace"
+
+// Page struct to define the template content
 type Page struct {
 	Title            string
 	Items            []string
-	CurrentDirectory string
+	WorkingDirectory string
 	PreviousEnabled  bool
 }
 
-// Base directory chroot
-const rootDir = "/Users/cyprillechauvry/workspace"
-
-// Current work directory
+// Current working directory
 var workDir = rootDir
 
 // Defines if the user can go previous or not
 var previousEnabled = false
 
-// GetHome Handles the response from the home path call
-func GetHome(rw http.ResponseWriter, req *http.Request) {
-	// Retrieves the "child" URI parameter
-	var child = req.URL.Query()["child"]
+// GoHome handles the response from the home path call
+func GoHome(rw http.ResponseWriter, req *http.Request) {
+	workDir = rootDir
 
-	// Retrieves the path if we passed a child param to navigate to
-	if len(child) > 0 {
-		workDir = workDir + "/" + child[0]
-	}
+	// Calls the navigation
+	Navigate(rw, workDir)
+}
+
+// GoBack handles the response from the back path call
+func GoBack(rw http.ResponseWriter, req *http.Request) {
+	// Appends the return signal to the current working directory
+	workDir = workDir + "/../"
 
 	// Cleans the path to interpret the return signal "../"
 	workDir = filepath.Clean(workDir)
 
+	// Calls the navigation
+	Navigate(rw, workDir)
+}
+
+// GoNext handles the response from a path call
+func GoNext(rw http.ResponseWriter, req *http.Request) {
+	// Retrieves the link by removing the "/api/navigation/" prefix
+	link := strings.TrimPrefix(req.RequestURI, "/api/navigation/")
+
+	// Appends the link to the working directory
+	workDir = workDir + "/" + link
+
+	// Calls the navigation
+	Navigate(rw, workDir)
+}
+
+// Navigate displays the content of the given workDir parameter
+func Navigate(rw http.ResponseWriter, workDir string) {
 	// Security protection to check if the path is a children of the rootDir, otherwise, throws an error
 	if strings.HasPrefix(workDir, rootDir) == false {
 		// Renders the 403 error template
@@ -62,9 +84,6 @@ func GetHome(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Retrieves the content list
-	var items = filesystem.GetPathContent(workDir)
-
 	// Handles the possibility to go previous or not
 	if rootDir == workDir {
 		previousEnabled = false
@@ -72,16 +91,19 @@ func GetHome(rw http.ResponseWriter, req *http.Request) {
 		previousEnabled = true
 	}
 
+	// Retrieves the content list
+	items := filesystem.GetPathContent(workDir)
+
 	// Defines the page parameters
 	p := Page{
 		Title:            "Home",
 		Items:            items,
-		CurrentDirectory: workDir,
+		WorkingDirectory: workDir,
 		PreviousEnabled:  previousEnabled,
 	}
 
 	// Renders the template
-	common.Templates = template.Must(template.ParseFiles("templates/filesystem/home.html", common.LayoutPath))
+	common.Templates = template.Must(template.ParseFiles("templates/filesystem/list.html", common.LayoutPath))
 
 	// Handles the errors
 	err := common.Templates.ExecuteTemplate(rw, "base", p)
