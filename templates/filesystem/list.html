@@ -1,25 +1,48 @@
 {{define "body"}}
+	<!-- Displays the current path -->
 	<i class="fas fa-folder-open"></i>&nbsp;{{.Path}}
+    <br/><br/>
 
-    <br><br>
-
+	<!-- Handles the display of the previous button based on path -->
 	{{if .PreviousEnabled}}
 		<a class="folder" href="/api/navigation/{{.Path}}../">
 			<i class="fas fa-chevron-left"></i>&nbsp;Previous
 		</a>
-		<br><br>
+		<br/><br/>
 	{{end}}
 
-	{{range $item := .Items}}
-		{{if eq $.Path "/" }}
-			<a class="" href="/api/navigation/{{$item}}">
-		{{else}}
-			<a class="" href="/api/navigation/{{$.Path}}/{{$item}}/">
+	<!-- Loop over the path content items -->
+	{{range $type, $item := .Items}}
+		<!-- Type directory -->
+		{{if eq $type "directories"}}
+			<!-- Loop over directories -->
+			{{range $directory := $item}}
+				<!-- Handles the link generation depending on the path level -->
+				{{if eq $.Path "/" }}
+					<a class="" href="/api/navigation/{{$item}}">
+				{{else}}
+					<a class="" href="/api/navigation/{{$.Path}}{{$directory}}/">
+				{{end}}
+						<i class="fas fa-folder"></i>&nbsp;{{$directory}}
+					</a>
+				<br/>
+			{{end}}
 		{{end}}
-			<i class="fas fa-folder"></i>&nbsp;{{$item}}
-		</a>
-		<br>
-	{{end}}
 
-	<br>
+		<!-- Type file -->
+		{{if eq $type "files"}}
+			<!-- Loop over files -->
+			{{range $file := $item}}
+				<!-- Handles the link generation depending on the path level -->
+				{{if eq $.Path "/" }}
+					<a class="" href="/api/navigation/{{$item}}">
+				{{else}}
+					<a class="" href="/api/navigation/{{$.Path}}{{$file}}">
+				{{end}}
+						<i class="fas fa-file"></i>&nbsp;{{$file}}
+					</a>
+				<br/>
+			{{end}}
+		{{end}}
+	{{end}}
 {{end}}

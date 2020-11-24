@@ -22,7 +22,7 @@ import (
 // Page struct to define the template content
 type Page struct {
 	Title            string
-	Items            []string
+	Items            map[string][]string
 	WorkingDirectory string
 	Path             string
 	PreviousEnabled  bool
