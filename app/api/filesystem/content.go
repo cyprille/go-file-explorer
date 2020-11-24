@@ -13,6 +13,7 @@ package filesystem
 
 import (
 	"io/ioutil"
+	"net/url"
 	"os"
 )
 
@@ -23,8 +24,10 @@ const RootDir = "/Users/cyprillechauvry/workspace/"
 
 // GetPathContent Returns the list of files and directories in the given RootDir/path
 func GetPathContent(path string) (map[string][]string, error) {
+	decodedPath, err := url.QueryUnescape(path)
+
 	// Reads the content of the given path
-	content, err := ioutil.ReadDir(RootDir + path)
+	content, err := ioutil.ReadDir(RootDir + decodedPath)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +40,7 @@ func GetPathContent(path string) (map[string][]string, error) {
 	// Loop over content (directories and files)
 	for _, c := range content {
 		// Retrieves informations on the target path
-		file, err := os.Stat(RootDir + path + c.Name())
+		file, err := os.Stat(RootDir + decodedPath + c.Name())
 		if err != nil {
 			return nil, err
 		}
