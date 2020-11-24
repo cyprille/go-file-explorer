@@ -21,10 +21,12 @@ Enter the project
 cd $GOPATH/src/go-file-explorer
 ```
 
-Import and update dependencies
+Launch the install command
 ```bash
-go get -u ./...
+make install
 ```
+
+Fill in the ``.env`` file at the project root with your parameters
 
 ## Run the application
 

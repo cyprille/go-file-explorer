@@ -14,7 +14,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"time"
 
 	common "go-file-explorer/app/common"
@@ -22,12 +24,30 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
 
 // main Boostraps the app
 func main() {
 	flag.Parse()
 	defer glog.Flush()
+
+	// load .env file from given path
+	// we keep it empty it will load .env from current directory
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	// getting env variables SITE_TITLE and DB_HOST
+	appTitle := os.Getenv("APP_TITLE")
+	serverPort := os.Getenv("SERVER_PORT")
+	rootDir := os.Getenv("ROOT_DIR")
+
+	fmt.Printf("godotenv : %s = %s \n", "App Title", appTitle)
+	fmt.Printf("godotenv : %s = %s \n", "Server Port", serverPort)
+	fmt.Printf("godotenv : %s = %s \n", "Root Dir", rootDir)
 
 	r := mux.NewRouter()
 	r.HandleFunc(`/api/open/{rest:[A-zÀ-ú0-9=\-\/.% ]+}`, handler.OpenFile)
