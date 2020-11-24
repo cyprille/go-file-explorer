@@ -13,16 +13,34 @@ package filesystem
 
 import (
 	"io/ioutil"
+	"log"
 	"net/url"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 // RootDir is the base directory chroot constant
-// @TODO: refacto to handle this in project parameters
-const RootDir = "/Users/cyprillechauvry/workspace/"
+var RootDir string
+
+// Initializes the parameters from .env file
+// @TODO: put this in dedicated package
+func initParams() {
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	RootDir = os.Getenv("ROOT_DIR")
+}
 
 // GetPathContent Returns the list of files and directories in the given RootDir/path
 func GetPathContent(path string) (map[string][]string, error) {
+	// Bootstraps the parameters initialization
+	// @TODO: put this in dedicated package
+	initParams()
+
 	decodedPath, err := url.QueryUnescape(path)
 
 	// Reads the content of the given path
@@ -62,5 +80,9 @@ func GetPathContent(path string) (map[string][]string, error) {
 
 // RetrieveFilePath Returns the full file path from the RootDir and the given path
 func RetrieveFilePath(path string) string {
+	// Bootstraps the parameters initialization
+	// @TODO: put this in dedicated package
+	initParams()
+
 	return RootDir + path
 }

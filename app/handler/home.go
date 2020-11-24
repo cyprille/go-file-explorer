@@ -17,10 +17,28 @@ import (
 	"go-file-explorer/app/api/filesystem"
 	"go-file-explorer/app/common"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/joho/godotenv"
 )
+
+// appTitle is the name of the app
+var appTitle string
+
+// Initializes the parameters from .env file
+// @TODO: put this in dedicated package
+func initParams() {
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	appTitle = os.Getenv("APP_TITLE")
+}
 
 // Page struct to define the template content
 type Page struct {
@@ -74,6 +92,10 @@ func OpenFile(rw http.ResponseWriter, req *http.Request) {
 
 // navigate displays the content of the given path parameter
 func navigate(rw http.ResponseWriter, path string) {
+	// Bootstraps the parameters initialization
+	// @TODO: put this in dedicated package
+	initParams()
+
 	// Handles the possibility to go previous or not depending on current path
 	if path == "./" || path == "." {
 		previousEnabled = false
@@ -98,7 +120,7 @@ func navigate(rw http.ResponseWriter, path string) {
 
 	// Defines the page parameters
 	p := Page{
-		Title:           "Home",
+		Title:           appTitle,
 		Items:           items,
 		RootDir:         filesystem.RootDir,
 		Path:            path,

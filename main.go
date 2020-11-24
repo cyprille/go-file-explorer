@@ -27,27 +27,29 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// main Boostraps the app
-func main() {
-	flag.Parse()
-	defer glog.Flush()
+// serverPort is the listening port of the server
+var serverPort string
 
-	// load .env file from given path
-	// we keep it empty it will load .env from current directory
+// Initializes the parameters from .env file
+// @TODO: put this in dedicated package
+func initParams() {
 	err := godotenv.Load(".env")
 
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
 
-	// getting env variables SITE_TITLE and DB_HOST
-	appTitle := os.Getenv("APP_TITLE")
-	serverPort := os.Getenv("SERVER_PORT")
-	rootDir := os.Getenv("ROOT_DIR")
+	serverPort = os.Getenv("SERVER_PORT")
+}
 
-	fmt.Printf("godotenv : %s = %s \n", "App Title", appTitle)
-	fmt.Printf("godotenv : %s = %s \n", "Server Port", serverPort)
-	fmt.Printf("godotenv : %s = %s \n", "Root Dir", rootDir)
+// main Boostraps the app
+func main() {
+	// Bootstraps the parameters initialization
+	// @TODO: put this in dedicated package
+	initParams()
+
+	flag.Parse()
+	defer glog.Flush()
 
 	r := mux.NewRouter()
 	r.HandleFunc(`/api/open/{rest:[A-zÀ-ú0-9=\-\/.% ]+}`, handler.OpenFile)
@@ -60,8 +62,7 @@ func main() {
 	fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
 	http.Handle("/static/", fileServer)
 
-	// @TODO: refacto to handle this in project parameters
-	err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":"+serverPort, nil)
 
 	if err != nil {
 		fmt.Println(err)
