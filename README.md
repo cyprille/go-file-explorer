@@ -7,7 +7,7 @@ It was developed to provide a UI to a NAS project running on a Raspberry Pi.
 
 ## Prerequisite
 
-- [https://golang.org/dl/](Golang) with a working workspace (GOPATH, GOROOT...)
+- [Golang](https://golang.org/dl/)) with a working workspace (GOPATH, GOROOT...)
 
 ## Installation
 
