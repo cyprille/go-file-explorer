@@ -35,9 +35,9 @@
 			{{range $file := $item}}
 				<!-- Handles the link generation depending on the path level -->
 				{{if eq $.Path "/" }}
-					<a class="" href="/api/navigation/{{$item}}">
+					<a class="" href="file://{{$.RootDir}}{{$item}}">
 				{{else}}
-					<a class="" href="/api/navigation/{{$.Path}}{{$file}}">
+					<a class="" href="file://{{$.RootDir}}{{$.Path}}{{$file}}">
 				{{end}}
 						<i class="fas fa-file"></i>&nbsp;{{$file}}
 					</a>

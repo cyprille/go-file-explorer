@@ -12,10 +12,13 @@
 package handler
 
 import (
+	"bufio"
+	"fmt"
 	"go-file-explorer/app/api/filesystem"
 	"go-file-explorer/app/common"
 	"html/template"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -24,6 +27,7 @@ type Page struct {
 	Title            string
 	Items            map[string][]string
 	WorkingDirectory string
+	RootDir          string
 	Path             string
 	PreviousEnabled  bool
 }
@@ -47,6 +51,25 @@ func GoToPath(rw http.ResponseWriter, req *http.Request) {
 
 	// Calls the navigation
 	navigate(rw, path)
+}
+
+// OpenFile Opens the file from the rootDir and the given path
+func OpenFile(rw http.ResponseWriter, req *http.Request) {
+	// Retrieves the link by removing the "/api/navigation/" prefix
+	path = strings.TrimPrefix(req.RequestURI, "/api/open/")
+
+	// Retrieves the full file path from the filestystem
+	filePath := filesystem.RetrieveFilePath(path)
+
+	f, _ := os.Open(filePath)
+	scanner := bufio.NewScanner(f)
+
+	// Loop over all lines in the file and print them.
+	for scanner.Scan() {
+		line := scanner.Text()
+
+		fmt.Println(line)
+	}
 }
 
 // navigate displays the content of the given path parameter
@@ -77,6 +100,7 @@ func navigate(rw http.ResponseWriter, path string) {
 	p := Page{
 		Title:           "Home",
 		Items:           items,
+		RootDir:         filesystem.RootDir,
 		Path:            path,
 		PreviousEnabled: previousEnabled,
 	}

@@ -16,15 +16,15 @@ import (
 	"os"
 )
 
-// rootDir is the base directory chroot constant
+// RootDir is the base directory chroot constant
 // @TODO: refacto to handle this in project parameters
 // @TODO: Improve this to handle files openning and 404 otherwise
-const rootDir = "/Users/cyprillechauvry/workspace/"
+const RootDir = "/Users/cyprillechauvry/workspace/"
 
-// GetPathContent Returns the list of files and directories in the given rootDir/path
+// GetPathContent Returns the list of files and directories in the given RootDir/path
 func GetPathContent(path string) (map[string][]string, error) {
 	// Reads the content of the given path
-	content, err := ioutil.ReadDir(rootDir + path)
+	content, err := ioutil.ReadDir(RootDir + path)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,7 @@ func GetPathContent(path string) (map[string][]string, error) {
 	// Loop over content (directories and files)
 	for _, c := range content {
 		// Retrieves informations on the target path
-		file, err := os.Stat(rootDir + path + c.Name())
+		file, err := os.Stat(RootDir + path + c.Name())
 		if err != nil {
 			return nil, err
 		}
@@ -56,4 +56,9 @@ func GetPathContent(path string) (map[string][]string, error) {
 	}
 
 	return items, nil
+}
+
+// RetrieveFilePath Returns the full file path from the RootDir and the given path
+func RetrieveFilePath(path string) string {
+	return RootDir + path
 }
