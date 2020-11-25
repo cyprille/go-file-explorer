@@ -1,6 +1,6 @@
 /*
  * Project: Go File Explorer
- * File: content.go
+ * File: filesystem.go
  * ---
  * Created: 22/11/2020
  * Author: Cyprille Chauvry
