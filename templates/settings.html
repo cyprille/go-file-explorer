@@ -1,10 +1,13 @@
 {{define "body"}}
-	<form>
+	<form method="POST" action="/settings">
 		<div class="form-check">
-			<input type="checkbox" class="form-check-input" id="show-hidden-files">
+			{{if .ShowHiddenFiles}}
+				<input type="checkbox" class="form-check-input" name="show-hidden-files" checked="checked">
+			{{else}}	
+				<input type="checkbox" class="form-check-input" name="show-hidden-files">
+			{{end}}
 			<label class="form-check-label" for="show-hidden-files">
 				&nbsp;Show hidden files
-				{{ .SetShowHiddenFiles }}
 			</label>
 		</div>
 		<br/>
