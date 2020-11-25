@@ -17,28 +17,10 @@ import (
 	"go-file-explorer/app/api/filesystem"
 	"go-file-explorer/app/common"
 	"html/template"
-	"log"
 	"net/http"
 	"os"
 	"strings"
-
-	"github.com/joho/godotenv"
 )
-
-// appTitle is the name of the app
-var appTitle string
-
-// Initializes the parameters from .env file
-// @TODO: put this in dedicated package
-func initParams() {
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
-	appTitle = os.Getenv("APP_TITLE")
-}
 
 // Page struct to define the template content
 type Page struct {
@@ -48,6 +30,7 @@ type Page struct {
 	RootDir          string
 	Path             string
 	PreviousEnabled  bool
+	CurrentPage      string
 }
 
 // Current path
@@ -56,14 +39,20 @@ var path = "./"
 // Defines if the user can go previous or not
 var previousEnabled = false
 
-// GoHome handles the response from the home path call
-func GoHome(rw http.ResponseWriter, req *http.Request) {
+// HomeHandler handles the response from the home path call
+func HomeHandler(rw http.ResponseWriter, req *http.Request) {
+	// Defines CurrentPage parameter
+	common.CurrentPage = "home"
+
 	// Calls the navigation
 	navigate(rw, "./")
 }
 
-// GoToPath handles the response from a path call
-func GoToPath(rw http.ResponseWriter, req *http.Request) {
+// PathHandler handles the response from a path call
+func PathHandler(rw http.ResponseWriter, req *http.Request) {
+	// Defines CurrentPage parameter
+	common.CurrentPage = "home"
+
 	// Retrieves the link by removing the "/api/navigation/" prefix
 	path = strings.TrimPrefix(req.RequestURI, "/api/navigation/")
 
@@ -71,8 +60,12 @@ func GoToPath(rw http.ResponseWriter, req *http.Request) {
 	navigate(rw, path)
 }
 
-// OpenFile Opens the file from the rootDir and the given path
-func OpenFile(rw http.ResponseWriter, req *http.Request) {
+// OpenFileHandler Opens the file from the rootDir and the given path
+// @TODO: Refacto this to handle the content's display with a stream
+func OpenFileHandler(rw http.ResponseWriter, req *http.Request) {
+	// Defines CurrentPage parameter
+	common.CurrentPage = "file"
+
 	// Retrieves the link by removing the "/api/navigation/" prefix
 	path = strings.TrimPrefix(req.RequestURI, "/api/open/")
 
@@ -92,10 +85,6 @@ func OpenFile(rw http.ResponseWriter, req *http.Request) {
 
 // navigate displays the content of the given path parameter
 func navigate(rw http.ResponseWriter, path string) {
-	// Bootstraps the parameters initialization
-	// @TODO: put this in dedicated package
-	initParams()
-
 	// Handles the possibility to go previous or not depending on current path
 	if path == "./" || path == "." {
 		previousEnabled = false
@@ -120,17 +109,17 @@ func navigate(rw http.ResponseWriter, path string) {
 
 	// Defines the page parameters
 	p := Page{
-		Title:           appTitle,
 		Items:           items,
 		RootDir:         filesystem.RootDir,
 		Path:            path,
 		PreviousEnabled: previousEnabled,
+		CurrentPage:     common.CurrentPage,
 	}
 
-	// Renders the template
+	// Boostraps the template
 	common.Templates = template.Must(template.ParseFiles("templates/filesystem/list.html", common.LayoutPath))
 
-	// Handles the errors
+	// Renders the template
 	err = common.Templates.ExecuteTemplate(rw, "base", p)
 	common.CheckError(err, 2)
 }

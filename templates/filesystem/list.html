@@ -5,9 +5,15 @@
 
 	<!-- Handles the display of the previous button based on path -->
 	{{if .PreviousEnabled}}
-		<a class="folder" href="/api/navigation/{{.Path}}../">
-			<i class="fas fa-chevron-left"></i>&nbsp;Previous
-		</a>
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<a class="folder" href="/api/navigation/{{.Path}}../">
+						<i class="fas fa-chevron-left"></i>&nbsp;Previous
+					</a>
+				</div>
+			</div>
+		</div>
 		<br/><br/>
 	{{end}}
 

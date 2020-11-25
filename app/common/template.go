@@ -15,8 +15,13 @@ import (
 	"html/template"
 )
 
+// @TODO: Pass params to the layout.html for the current page active link and app title params
+
 // Templates Allows access to the template pointer from the entire application
 var Templates *template.Template
+
+// CurrentPage Defines the calling page rendering the template (to handle active links)
+var CurrentPage = ""
 
 // LayoutPath Defines the path of the layout template page
 const LayoutPath string = "templates/layout.html"

@@ -52,11 +52,12 @@ func main() {
 	defer glog.Flush()
 
 	r := mux.NewRouter()
-	r.HandleFunc(`/api/open/{rest:[A-zÀ-ú0-9=\-\/.% ]+}`, handler.OpenFile)
-	r.HandleFunc(`/api/navigation/{rest:[A-zÀ-ú0-9=\-\/.% ]+}`, handler.GoToPath)
-	r.HandleFunc(`/api/navigation/`, handler.GoHome)
-	r.HandleFunc(`/api/`, handler.GoHome)
-	r.HandleFunc(`/`, handler.GoHome)
+	r.HandleFunc(`/settings`, handler.SettingsHandler)
+	r.HandleFunc(`/api/open/{rest:[A-zÀ-ú0-9=\-\/.% ]+}`, handler.OpenFileHandler)
+	r.HandleFunc(`/api/navigation/{rest:[A-zÀ-ú0-9=\-\/.% ]+}`, handler.PathHandler)
+	r.HandleFunc(`/api/navigation/`, handler.HomeHandler)
+	r.HandleFunc(`/api/`, handler.HomeHandler)
+	r.HandleFunc(`/`, handler.HomeHandler)
 	http.Handle(`/`, r)
 
 	fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
