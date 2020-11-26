@@ -51,9 +51,10 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string][]string, err
 
 	// Init the arrays of data
 	items := map[string][]string{}
+	hiddenDirectories := []string{}
 	directories := []string{}
-	files := []string{}
 	hiddenFiles := []string{}
+	files := []string{}
 
 	// Loop over content (directories files)
 	for _, c := range content {
@@ -71,7 +72,11 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string][]string, err
 		// Checks if the target path is a directory or a file
 		switch mode := file.Mode(); {
 		case mode.IsDir():
-			directories = append(directories, c.Name())
+			if c.Name()[0:1] == "." {
+				hiddenDirectories = append(hiddenDirectories, c.Name())
+			} else {
+				directories = append(directories, c.Name())
+			}
 		case mode.IsRegular():
 			if c.Name()[0:1] == "." {
 				hiddenFiles = append(hiddenFiles, c.Name())
@@ -81,9 +86,10 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string][]string, err
 		}
 
 		// Populates the values map
-		items["1_directories"] = directories
-		items["2_hidden_files"] = hiddenFiles
-		items["3_files"] = files
+		items["1_hidden_directories"] = hiddenDirectories
+		items["2_directories"] = directories
+		items["3_hidden_files"] = hiddenFiles
+		items["4_files"] = files
 	}
 
 	return items, nil

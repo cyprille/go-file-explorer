@@ -20,7 +20,23 @@
 	<!-- Loop over the path content items -->
 	{{range $type, $item := .Items}}
 		<!-- Type directory -->
-		{{if eq $type "1_directories"}}
+		{{if eq $type "1_hidden_directories"}}
+			<!-- Loop over directories -->
+			{{range $hiddenDirectory := $item}}
+				<!-- Handles the link generation depending on the path level -->
+				{{if eq $.Path "/" }}
+					<a class="" href="/api/navigation/{{$item}}">
+				{{else}}
+					<a class="" href="/api/navigation/{{$.Path}}{{$hiddenDirectory}}/">
+				{{end}}
+						<i class="fas fa-folder text-secondary"></i>&nbsp;{{$hiddenDirectory}}
+					</a>
+				<br/>
+			{{end}}
+		{{end}}
+	
+		<!-- Type directory -->
+		{{if eq $type "2_directories"}}
 			<!-- Loop over directories -->
 			{{range $directory := $item}}
 				<!-- Handles the link generation depending on the path level -->
@@ -36,7 +52,7 @@
 		{{end}}
 
 		<!-- Type hiddenFile -->
-		{{if eq $type "2_hidden_files"}}
+		{{if eq $type "3_hidden_files"}}
 			<!-- Loop over hiddenFile -->
 			{{range $hiddenFile := $item}}
 				<!-- Handles the link generation depending on the path level -->
@@ -52,7 +68,7 @@
 		{{end}}
 
 		<!-- Type file -->
-		{{if eq $type "3_files"}}
+		{{if eq $type "4_files"}}
 			<!-- Loop over files -->
 			{{range $file := $item}}
 				<!-- Handles the link generation depending on the path level -->
