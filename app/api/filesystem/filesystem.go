@@ -53,8 +53,9 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string][]string, err
 	items := map[string][]string{}
 	directories := []string{}
 	files := []string{}
+	hiddenFiles := []string{}
 
-	// Loop over content (directories and files)
+	// Loop over content (directories files)
 	for _, c := range content {
 		// Jumps the iteration if we won't show hidden files and if the file is an hidden one
 		if showHiddenFiles == false && c.Name()[0:1] == "." {
@@ -72,12 +73,17 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string][]string, err
 		case mode.IsDir():
 			directories = append(directories, c.Name())
 		case mode.IsRegular():
-			files = append(files, c.Name())
+			if c.Name()[0:1] == "." {
+				hiddenFiles = append(hiddenFiles, c.Name())
+			} else {
+				files = append(files, c.Name())
+			}
 		}
 
 		// Populates the values map
-		items["directories"] = directories
-		items["files"] = files
+		items["1_directories"] = directories
+		items["2_hidden_files"] = hiddenFiles
+		items["3_files"] = files
 	}
 
 	return items, nil
