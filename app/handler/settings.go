@@ -15,7 +15,6 @@ import (
 	"fmt"
 	"go-file-explorer/app/common"
 	"html/template"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -72,11 +71,11 @@ func SettingsHandler(rw http.ResponseWriter, req *http.Request) {
 // ShowHiddenFiles Returns if the hidden files must be shown
 func ShowHiddenFiles(req *http.Request) bool {
 	// Retrieves the cookie for the parameter ShowHiddenFiles
-	showHiddenFilesCookie, err := req.Cookie("show-hidden-files")
+	showHiddenFilesCookie, _ := req.Cookie("show-hidden-files")
 
-	// Handles the cookie read error
-	if err != nil {
-		log.Fatal("Unable to read the parameter \"show-hidden-files\".")
+	// Returns the default value for showHiddenFiles parameter if there is no defined cookie
+	if showHiddenFilesCookie == nil {
+		return false
 	}
 
 	// Stores the cookie value to a bool type
