@@ -1,7 +1,7 @@
 {{define "body"}}
 	<form method="POST" action="/settings">
 		<div class="form-check">
-			{{if .ShowHiddenFiles}}
+			{{if eq .ShowHiddenFiles true}}
 				<input type="checkbox" class="form-check-input" name="show-hidden-files" checked="checked">
 			{{else}}	
 				<input type="checkbox" class="form-check-input" name="show-hidden-files">

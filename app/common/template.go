@@ -15,8 +15,6 @@ import (
 	"html/template"
 )
 
-// @TODO: Pass params to the layout.html for the current page active link and app title params
-
 // Templates Allows access to the template pointer from the entire application
 var Templates *template.Template
 

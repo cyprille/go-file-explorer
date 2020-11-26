@@ -14,23 +14,26 @@ package handler
 import (
 	"bufio"
 	"fmt"
-	"go-file-explorer/app/api/filesystem"
-	"go-file-explorer/app/common"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 	"strings"
+
+	"go-file-explorer/app/api/filesystem"
+	"go-file-explorer/app/common"
+
+	"github.com/joho/godotenv"
 )
 
 // Page struct to define the template content
 type Page struct {
-	Title            string
-	Items            map[string][]string
-	WorkingDirectory string
-	RootDir          string
-	Path             string
-	PreviousEnabled  bool
-	CurrentPage      string
+	AppTitle        string
+	Items           map[string][]string
+	RootDir         string
+	Path            string
+	PreviousEnabled bool
+	CurrentPage     string
 }
 
 // Current path
@@ -39,13 +42,28 @@ var path = "./"
 // Defines if the user can go previous or not
 var previousEnabled = false
 
+// appTitle The name of the app
+var appTitle string
+
+// Initializes the parameters from .env file
+// @TODO: put this in dedicated package
+func initParams() {
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	appTitle = os.Getenv("APP_TITLE")
+}
+
 // HomeHandler handles the response from the home path call
 func HomeHandler(rw http.ResponseWriter, req *http.Request) {
 	// Defines CurrentPage parameter
 	common.CurrentPage = "home"
 
 	// Calls the navigation
-	navigate(rw, "./")
+	navigate(rw, req, "./")
 }
 
 // PathHandler handles the response from a path call
@@ -57,7 +75,7 @@ func PathHandler(rw http.ResponseWriter, req *http.Request) {
 	path = strings.TrimPrefix(req.RequestURI, "/api/navigation/")
 
 	// Calls the navigation
-	navigate(rw, path)
+	navigate(rw, req, path)
 }
 
 // OpenFileHandler Opens the file from the rootDir and the given path
@@ -84,7 +102,11 @@ func OpenFileHandler(rw http.ResponseWriter, req *http.Request) {
 }
 
 // navigate displays the content of the given path parameter
-func navigate(rw http.ResponseWriter, path string) {
+func navigate(rw http.ResponseWriter, req *http.Request, path string) {
+	// Bootstraps the parameters initialization
+	// @TODO: put this in dedicated package
+	initParams()
+
 	// Handles the possibility to go previous or not depending on current path
 	if path == "./" || path == "." {
 		previousEnabled = false
@@ -93,14 +115,14 @@ func navigate(rw http.ResponseWriter, path string) {
 	}
 
 	// Retrieves the content list
-	items, err := filesystem.GetPathContent(path)
+	items, err := filesystem.GetPathContent(path, ShowHiddenFiles(req))
 
 	// If the path is not found
 	if err != nil {
-		// Renders the 404 error template
+		// Boostraps the template
 		common.Templates = template.Must(template.ParseFiles("templates/filesystem/404.html", common.LayoutPath))
 
-		// Handles the errors
+		// Renders the 404 error template
 		err := common.Templates.ExecuteTemplate(rw, "base", nil)
 		common.CheckError(err, 2)
 
@@ -109,6 +131,7 @@ func navigate(rw http.ResponseWriter, path string) {
 
 	// Defines the page parameters
 	p := Page{
+		AppTitle:        appTitle,
 		Items:           items,
 		RootDir:         filesystem.RootDir,
 		Path:            path,

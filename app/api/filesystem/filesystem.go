@@ -36,7 +36,7 @@ func initParams() {
 }
 
 // GetPathContent Returns the list of files and directories in the given RootDir/path
-func GetPathContent(path string) (map[string][]string, error) {
+func GetPathContent(path string, showHiddenFiles bool) (map[string][]string, error) {
 	// Bootstraps the parameters initialization
 	// @TODO: put this in dedicated package
 	initParams()
@@ -56,6 +56,11 @@ func GetPathContent(path string) (map[string][]string, error) {
 
 	// Loop over content (directories and files)
 	for _, c := range content {
+		// Jumps the iteration if we won't show hidden files and if the file is an hidden one
+		if showHiddenFiles == false && c.Name()[0:1] == "." {
+			continue
+		}
+
 		// Retrieves informations on the target path
 		file, err := os.Stat(RootDir + decodedPath + c.Name())
 		if err != nil {
