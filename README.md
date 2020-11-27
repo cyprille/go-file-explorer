@@ -36,7 +36,7 @@ go run main.go
 ```
 
 Then, open your browser and navigate to [http://localhost:SERVER_PORT](http://localhost:SERVER_PORT).
-The ``SERVER_PORT`` variable is the one you defined in the .env file.
+The ``SERVER_PORT`` variable is the one you defined in the ``.env`` file.
 
 ## Run the application in production mode
 
@@ -51,7 +51,7 @@ Start the app
 ```
 
 Then, open your browser and navigate to [http://localhost:SERVER_PORT](http://localhost:SERVER_PORT).
-The ``SERVER_PORT`` variable is the one you defined in the .env file.
+The ``SERVER_PORT`` variable is the one you defined in the ``.env`` file.
 
 ## Set the application as a background service
 
@@ -62,10 +62,10 @@ sudo cp go-file-explorer.service /etc/systemd/system/
 
 Run the following command to start the service
 ```bash
-sudo systemctl start myscript.service
+sudo systemctl start go-file-explorer.service
 ```
 
 Run the following command to auto start the service on boot
 ```bash
-sudo systemctl enable myscript.service
+sudo systemctl enable go-file-explorer.service
 ```
