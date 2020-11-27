@@ -1,0 +1,14 @@
+[Unit]
+Description=Go File Explorer
+After=network-online.target
+
+[Service]
+ExecStart=/home/pi/workspace/go/src/go-file-explorer/go-file-explorer
+WorkingDirectory=/home/pi/workspace/go/src/go-file-explorer/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target

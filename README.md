@@ -57,7 +57,7 @@ The ``SERVER_PORT`` variable is the one you defined in the ``.env`` file.
 
 Copy the service file to your systemd
 ```bash
-sudo cp go-file-explorer.service /etc/systemd/system/
+sudo cp ressources/go-file-explorer.service /etc/systemd/system/
 ```
 
 Run the following command to start the service
