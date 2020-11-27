@@ -48,7 +48,7 @@ var appTitle string
 // Initializes the parameters from .env file
 // @TODO: put this in dedicated package
 func initParams() {
-	err := godotenv.Load(".env")
+	err := godotenv.Load("./.env")
 
 	if err != nil {
 		log.Fatalf("Error loading .env file")
