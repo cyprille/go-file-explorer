@@ -28,11 +28,44 @@ make install
 
 Fill in the ``.env`` file at the project root with your parameters
 
-## Run the application
+## Run the application in development mode
 
 Start the app
 ```bash
 go run main.go
 ```
 
-Then, open your browser and navigate to [http://localhost:8080](http://localhost:8080)
+Then, open your browser and navigate to [http://localhost:SERVER_PORT](http://localhost:SERVER_PORT).
+The ``SERVER_PORT`` variable is the one you defined in the .env file.
+
+## Run the application in production mode
+
+Build the app
+```bash
+go build
+```
+
+Start the app
+```bash
+./go-file-explorer
+```
+
+Then, open your browser and navigate to [http://localhost:SERVER_PORT](http://localhost:SERVER_PORT).
+The ``SERVER_PORT`` variable is the one you defined in the .env file.
+
+## Set the application as a background service
+
+Copy the service file to your systemd
+```bash
+sudo cp go-file-explorer.service /etc/systemd/system/
+```
+
+Run the following command to start the service
+```bash
+sudo systemctl start myscript.service
+```
+
+Run the following command to auto start the service on boot
+```bash
+sudo systemctl enable myscript.service
+```
