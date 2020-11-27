@@ -62,10 +62,10 @@ sudo cp ressources/go-file-explorer.service /etc/systemd/system/
 
 Run the following command to start the service
 ```bash
-sudo systemctl start go-file-explorer.service
+sudo systemctl start go-file-explorer
 ```
 
 Run the following command to auto start the service on boot
 ```bash
-sudo systemctl enable go-file-explorer.service
+sudo systemctl enable go-file-explorer
 ```
