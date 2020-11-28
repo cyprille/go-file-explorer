@@ -14,7 +14,6 @@ package filesystem
 import (
 	"io/ioutil"
 	"log"
-	"net/url"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -41,10 +40,8 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string][]string, err
 	// @TODO: put this in dedicated package
 	initParams()
 
-	decodedPath, err := url.QueryUnescape(path)
-
 	// Reads the content of the given path
-	content, err := ioutil.ReadDir(RootDir + decodedPath)
+	content, err := ioutil.ReadDir(RootDir + path)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +61,7 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string][]string, err
 		}
 
 		// Retrieves informations on the target path
-		file, err := os.Stat(RootDir + decodedPath + c.Name())
+		file, err := os.Stat(RootDir + path + c.Name())
 		if err != nil {
 			return nil, err
 		}

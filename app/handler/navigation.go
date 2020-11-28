@@ -17,6 +17,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 
@@ -107,17 +108,19 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 	// @TODO: put this in dedicated package
 	initParams()
 
-	// Handles the possibility to go previous or not depending on current path
-	if path == "./" || path == "." {
+	decodedPath, err := url.QueryUnescape(path)
+
+	// Handles the possibility to go previous or not depending on current decodedPath
+	if decodedPath == "./" || decodedPath == "." {
 		previousEnabled = false
 	} else {
 		previousEnabled = true
 	}
 
 	// Retrieves the content list
-	items, err := filesystem.GetPathContent(path, ShowHiddenFiles(req))
+	items, err := filesystem.GetPathContent(decodedPath, ShowHiddenFiles(req))
 
-	// If the path is not found
+	// If the decodedPath is not found
 	if err != nil {
 		// Boostraps the template
 		common.Templates = template.Must(template.ParseFiles("templates/filesystem/404.html", common.LayoutPath))
@@ -134,7 +137,7 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 		AppTitle:        appTitle,
 		Items:           items,
 		RootDir:         filesystem.RootDir,
-		Path:            path,
+		Path:            decodedPath,
 		PreviousEnabled: previousEnabled,
 		CurrentPage:     common.CurrentPage,
 	}

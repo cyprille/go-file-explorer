@@ -53,8 +53,8 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc(`/settings`, handler.SettingsHandler)
-	r.HandleFunc(`/api/open/{rest:[A-zÀ-ú0-9=\-\/.% ]+}`, handler.OpenFileHandler)
-	r.HandleFunc(`/api/navigation/{rest:[A-zÀ-ú0-9=\-\/.% ]+}`, handler.PathHandler)
+	r.HandleFunc(`/api/open/{rest:.+}`, handler.OpenFileHandler)
+	r.HandleFunc(`/api/navigation/{rest:.+}`, handler.PathHandler)
 	r.HandleFunc(`/api/navigation/`, handler.HomeHandler)
 	r.HandleFunc(`/api/`, handler.HomeHandler)
 	r.HandleFunc(`/`, handler.HomeHandler)
