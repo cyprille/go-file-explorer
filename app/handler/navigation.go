@@ -33,6 +33,10 @@ type Page struct {
 	Items           map[string][]string
 	RootDir         string
 	Path            string
+	Breadcrumbs     []string
+	Depth           int
+	BackLinks       []string
+	RealDepth       int
 	PreviousEnabled bool
 	CurrentPage     string
 }
@@ -108,6 +112,7 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 	// @TODO: put this in dedicated package
 	initParams()
 
+	// Decode special cars in path
 	decodedPath, err := url.QueryUnescape(path)
 
 	// Handles the possibility to go previous or not depending on current decodedPath
@@ -132,12 +137,33 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 		return
 	}
 
+	// Generates values for breadcrumbs display
+	breadcrumbs := strings.Split(strings.TrimSuffix(decodedPath, "/"), "/")
+	realDepth := len(breadcrumbs)
+
+	// Calculate the highest index to represent the depth of the breadcrumbs
+	// It's just because golang templates cannot do arythmetics and range starts at 0 :/
+	depth := realDepth - 1
+	var backLinks []string
+
+	for i := range breadcrumbs {
+		// Generates the number of back links depending on the depth
+		nb := realDepth - (i + 1)
+
+		// Append the back link in the same order as the breadcrumbs
+		backLinks = append(backLinks, strings.Repeat("../", nb))
+	}
+
 	// Defines the page parameters
 	p := Page{
 		AppTitle:        appTitle,
 		Items:           items,
 		RootDir:         filesystem.RootDir,
 		Path:            decodedPath,
+		Breadcrumbs:     breadcrumbs,
+		Depth:           depth,
+		BackLinks:       backLinks,
+		RealDepth:       realDepth,
 		PreviousEnabled: previousEnabled,
 		CurrentPage:     common.CurrentPage,
 	}

@@ -1,7 +1,26 @@
 {{define "body"}}
 	<!-- Displays the current path -->
-	<i class="fas fa-folder-open text-warning"></i>&nbsp;{{.Path}}
-    <br/><br/>
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<!-- Loop over the breadcrumbs -->
+			{{range $i, $breadcrumb := .Breadcrumbs}}
+				{{if eq $i 0}}
+					<span>
+						<a href="/">
+							<i class="fas fa-folder-open text-warning"></i>&nbsp;~
+						</a>&nbsp;
+					</span>
+				{{end}}
+
+				{{if eq $i $.Depth}}
+					<li class="breadcrumb-item active" aria-current="page">{{$breadcrumb}}</li>
+				{{else}}
+					<li class="breadcrumb-item"><a href="{{index $.BackLinks $i}}">{{$breadcrumb}}</a></li>
+				{{end}}
+			{{end}}
+		</ol>
+	</nav>
+	<br/><br/>
 
 	<!-- Handles the display of the previous button based on path -->
 	{{if .PreviousEnabled}}
