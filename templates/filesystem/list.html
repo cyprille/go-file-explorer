@@ -1,105 +1,106 @@
 {{define "body"}}
-	<!-- Displays the current path -->
-	<nav aria-label="breadcrumb">
-		<ol class="breadcrumb">
-			<!-- Loop over the breadcrumbs -->
-			{{range $i, $breadcrumb := .Breadcrumbs}}
-				{{if eq $i 0}}
-					<span>
-						<a href="/">
-							<i class="fas fa-folder-open text-warning"></i>&nbsp;~
-						</a>&nbsp;
-					</span>
-				{{end}}
-
-				{{if eq $i $.Depth}}
-					<li class="breadcrumb-item active" aria-current="page">{{$breadcrumb}}</li>
-				{{else}}
-					<li class="breadcrumb-item"><a href="{{index $.BackLinks $i}}">{{$breadcrumb}}</a></li>
-				{{end}}
+	<div class="row">
+		<div class="col-sm-2">
+			<!-- Handles the display of the previous button based on path -->
+			{{if .PreviousEnabled}}
+				<a class="btn btn-outline-secondary folder" href="/api/navigation/{{.Path}}../">
+			{{else}}
+				<a class="btn btn-outline-secondary folder disabled" href="/api/navigation/{{.Path}}../">
 			{{end}}
-		</ol>
-	</nav>
-	<br/><br/>
-
-	<!-- Handles the display of the previous button based on path -->
-	{{if .PreviousEnabled}}
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<a class="folder" href="/api/navigation/{{.Path}}../">
-						<i class="fas fa-chevron-left"></i>&nbsp;Previous
-					</a>
-				</div>
-			</div>
+					<i class="fas fa-chevron-left"></i>&nbsp;Previous
+				</a>
+				<br/><br/>
 		</div>
-		<br/><br/>
-	{{end}}
+		<div class="col-sm-10">
+			<!-- Displays the current path -->
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<!-- Loop over the breadcrumbs -->
+					{{range $i, $breadcrumb := .Breadcrumbs}}
+						{{if eq $i 0}}
+							<span>
+								<a href="/">
+									<i class="fas fa-folder-open text-warning"></i>&nbsp;~
+								</a>&nbsp;
+							</span>
+						{{end}}
 
-	<!-- Loop over the path content items -->
-	{{range $type, $item := .Items}}
-		<!-- Type directory -->
-		{{if eq $type "1_hidden_directories"}}
-			<!-- Loop over directories -->
-			{{range $hiddenDirectory := $item}}
-				<!-- Handles the link generation depending on the path level -->
-				{{if eq $.Path "/" }}
-					<a class="" href="/api/navigation/{{$item}}">
-				{{else}}
-					<a class="" href="/api/navigation/{{$.Path}}{{$hiddenDirectory}}/">
-				{{end}}
-						<i class="fas fa-folder text-secondary"></i>&nbsp;{{$hiddenDirectory}}
-					</a>
-				<br/>
-			{{end}}
-		{{end}}
-	
-		<!-- Type directory -->
-		{{if eq $type "2_directories"}}
-			<!-- Loop over directories -->
-			{{range $directory := $item}}
-				<!-- Handles the link generation depending on the path level -->
-				{{if eq $.Path "/" }}
-					<a class="" href="/api/navigation/{{$item}}">
-				{{else}}
-					<a class="" href="/api/navigation/{{$.Path}}{{$directory}}/">
-				{{end}}
-						<i class="fas fa-folder"></i>&nbsp;{{$directory}}
-					</a>
-				<br/>
-			{{end}}
-		{{end}}
+						{{if eq $i $.Depth}}
+							<li class="breadcrumb-item active" aria-current="page">{{$breadcrumb}}</li>
+						{{else}}
+							<li class="breadcrumb-item"><a href="{{index $.BackLinks $i}}">{{$breadcrumb}}</a></li>
+						{{end}}
+					{{end}}
+				</ol>
+			</nav>
+			<br/>
 
-		<!-- Type hiddenFile -->
-		{{if eq $type "3_hidden_files"}}
-			<!-- Loop over hiddenFile -->
-			{{range $hiddenFile := $item}}
-				<!-- Handles the link generation depending on the path level -->
-				{{if eq $.Path "/" }}
-					<a class="" href="file://{{$.RootDir}}{{$item}}">
-				{{else}}
-					<a class="" href="file://{{$.RootDir}}{{$.Path}}{{$hiddenFile}}">
+			<!-- Loop over the path content items -->
+			{{range $type, $item := .Items}}
+				<!-- Type directory -->
+				{{if eq $type "1_hidden_directories"}}
+					<!-- Loop over directories -->
+					{{range $hiddenDirectory := $item}}
+						<!-- Handles the link generation depending on the path level -->
+						{{if eq $.Path "/" }}
+							<a class="" href="/api/navigation/{{$item}}">
+						{{else}}
+							<a class="" href="/api/navigation/{{$.Path}}{{$hiddenDirectory}}/">
+						{{end}}
+								<i class="fas fa-folder text-secondary"></i>&nbsp;{{$hiddenDirectory}}
+							</a>
+							<br/>
+					{{end}}
 				{{end}}
-						<i class="fas fa-file text-danger"></i>&nbsp;{{$hiddenFile}}
-					</a>
-				<br/>
-			{{end}}
-		{{end}}
+			
+				<!-- Type directory -->
+				{{if eq $type "2_directories"}}
+					<!-- Loop over directories -->
+					{{range $directory := $item}}
+						<!-- Handles the link generation depending on the path level -->
+						{{if eq $.Path "/" }}
+							<a class="" href="/api/navigation/{{$item}}">
+						{{else}}
+							<a class="" href="/api/navigation/{{$.Path}}{{$directory}}/">
+						{{end}}
+								<i class="fas fa-folder"></i>&nbsp;{{$directory}}
+							</a>
+							<br/>
+					{{end}}
+				{{end}}
 
-		<!-- Type file -->
-		{{if eq $type "4_files"}}
-			<!-- Loop over files -->
-			{{range $file := $item}}
-				<!-- Handles the link generation depending on the path level -->
-				{{if eq $.Path "/" }}
-					<a class="" href="file://{{$.RootDir}}{{$item}}">
-				{{else}}
-					<a class="" href="file://{{$.RootDir}}{{$.Path}}{{$file}}">
+				<!-- Type hiddenFile -->
+				{{if eq $type "3_hidden_files"}}
+					<!-- Loop over hiddenFile -->
+					{{range $hiddenFile := $item}}
+						<!-- Handles the link generation depending on the path level -->
+						{{if eq $.Path "/" }}
+							<a class="" href="file://{{$.RootDir}}{{$item}}">
+						{{else}}
+							<a class="" href="file://{{$.RootDir}}{{$.Path}}{{$hiddenFile}}">
+						{{end}}
+								<i class="fas fa-file text-danger"></i>&nbsp;{{$hiddenFile}}
+							</a>
+							<br/>
+					{{end}}
 				{{end}}
-						<i class="fas fa-file text-success"></i>&nbsp;{{$file}}
-					</a>
-				<br/>
+
+				<!-- Type file -->
+				{{if eq $type "4_files"}}
+					<!-- Loop over files -->
+					{{range $file := $item}}
+						<!-- Handles the link generation depending on the path level -->
+						{{if eq $.Path "/" }}
+							<a class="" href="file://{{$.RootDir}}{{$item}}">
+						{{else}}
+							<a class="" href="file://{{$.RootDir}}{{$.Path}}{{$file}}">
+						{{end}}
+								<i class="fas fa-file text-success"></i>&nbsp;{{$file}}
+							</a>
+							<br/>
+					{{end}}
+				{{end}}
 			{{end}}
-		{{end}}
-	{{end}}
+		</div>
+	</div>
 {{end}}

@@ -1,0 +1,37 @@
+/* START: Redefines the header height */
+.navbar {
+    min-height: 34px;
+} 
+.navbar-brand {
+    padding: 0;
+    height: 34px;
+    line-height: 34px;
+}  
+.navbar-toggle {
+    margin-top: 15px;
+    padding: 9px 10px !important;
+}
+@media (min-width: 768px) {
+    .navbar-nav > li > a {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        line-height: 8px;
+    }
+}
+.main-content {
+    overflow-y: scroll; 
+    position:absolute;
+    top: 50px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+}
+/* END */
+
+/* START: Redefines the container width */
+@media (min-width: 768px) {
+    .container{
+        max-width: 1600px;
+    }
+}
+/* END */
