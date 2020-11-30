@@ -63,7 +63,7 @@ func SettingsHandler(rw http.ResponseWriter, req *http.Request) {
 		cookie := http.Cookie{Name: "show-hidden-files", Value: strconv.FormatBool(showHiddenFiles), Expires: expiration}
 		http.SetCookie(rw, &cookie)
 
-		// Redirects to the previous page
+		// Redirects to the parent page
 		http.Redirect(rw, req, req.Header.Get("Referer"), 302)
 	}
 }

@@ -29,23 +29,23 @@ import (
 
 // Page struct to define the template content
 type Page struct {
-	AppTitle        string
-	Items           map[string][]string
-	RootDir         string
-	Path            string
-	Breadcrumbs     []string
-	Depth           int
-	BackLinks       []string
-	RealDepth       int
-	PreviousEnabled bool
-	CurrentPage     string
+	AppTitle      string
+	Items         map[string]map[string][]string
+	RootDir       string
+	Path          string
+	Breadcrumbs   []string
+	Depth         int
+	BackLinks     []string
+	RealDepth     int
+	ParentEnabled bool
+	CurrentPage   string
 }
 
 // Current path
 var path = "./"
 
-// Defines if the user can go previous or not
-var previousEnabled = false
+// Defines if the user can go to the parent or not
+var parentEnabled = false
 
 // appTitle The name of the app
 var appTitle string
@@ -115,11 +115,11 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 	// Decode special cars in path
 	decodedPath, err := url.QueryUnescape(path)
 
-	// Handles the possibility to go previous or not depending on current decodedPath
+	// Handles the possibility to go to the parent or not depending on current decodedPath
 	if decodedPath == "./" || decodedPath == "." {
-		previousEnabled = false
+		parentEnabled = false
 	} else {
-		previousEnabled = true
+		parentEnabled = true
 	}
 
 	// Retrieves the content list
@@ -156,16 +156,16 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 
 	// Defines the page parameters
 	p := Page{
-		AppTitle:        appTitle,
-		Items:           items,
-		RootDir:         filesystem.RootDir,
-		Path:            decodedPath,
-		Breadcrumbs:     breadcrumbs,
-		Depth:           depth,
-		BackLinks:       backLinks,
-		RealDepth:       realDepth,
-		PreviousEnabled: previousEnabled,
-		CurrentPage:     common.CurrentPage,
+		AppTitle:      appTitle,
+		Items:         items,
+		RootDir:       filesystem.RootDir,
+		Path:          decodedPath,
+		Breadcrumbs:   breadcrumbs,
+		Depth:         depth,
+		BackLinks:     backLinks,
+		RealDepth:     realDepth,
+		ParentEnabled: parentEnabled,
+		CurrentPage:   common.CurrentPage,
 	}
 
 	// Boostraps the template

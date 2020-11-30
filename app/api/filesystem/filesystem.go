@@ -35,7 +35,7 @@ func initParams() {
 }
 
 // GetPathContent Returns the list of files and directories in the given RootDir/path
-func GetPathContent(path string, showHiddenFiles bool) (map[string][]string, error) {
+func GetPathContent(path string, showHiddenFiles bool) (map[string]map[string][]string, error) {
 	// Bootstraps the parameters initialization
 	// @TODO: put this in dedicated package
 	initParams()
@@ -47,9 +47,17 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string][]string, err
 	}
 
 	// Init the arrays of data
-	items := map[string][]string{}
+	items := map[string]map[string][]string{
+		"1_directories": {},
+		"2_symlinks":    {},
+		"3_files":       {},
+	}
+
+	// Declares data types
 	hiddenDirectories := []string{}
 	directories := []string{}
+	hiddenSymlinks := []string{}
+	symlinks := []string{}
 	hiddenFiles := []string{}
 	files := []string{}
 
@@ -66,27 +74,43 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string][]string, err
 			return nil, err
 		}
 
-		// Checks if the target path is a directory or a file
-		switch mode := file.Mode(); {
-		case mode.IsDir():
+		fileInfo, err := os.Lstat(RootDir + path + c.Name())
+
+		// If the parsed file is a symlink
+		if fileInfo.Mode()&os.ModeSymlink == os.ModeSymlink {
+			// Handles the hidden mode of the item
 			if c.Name()[0:1] == "." {
-				hiddenDirectories = append(hiddenDirectories, c.Name())
+				hiddenSymlinks = append(hiddenSymlinks, c.Name())
 			} else {
-				directories = append(directories, c.Name())
+				symlinks = append(symlinks, c.Name())
 			}
-		case mode.IsRegular():
-			if c.Name()[0:1] == "." {
-				hiddenFiles = append(hiddenFiles, c.Name())
-			} else {
-				files = append(files, c.Name())
+		} else {
+			// Checks if the target path is a directory or a file
+			switch mode := file.Mode(); {
+			case mode.IsDir():
+				// Handles the hidden mode of the item
+				if c.Name()[0:1] == "." {
+					hiddenDirectories = append(hiddenDirectories, c.Name())
+				} else {
+					directories = append(directories, c.Name())
+				}
+			case mode.IsRegular():
+				// Handles the hidden mode of the item
+				if c.Name()[0:1] == "." {
+					hiddenFiles = append(hiddenFiles, c.Name())
+				} else {
+					files = append(files, c.Name())
+				}
 			}
 		}
 
 		// Populates the values map
-		items["1_hidden_directories"] = hiddenDirectories
-		items["2_directories"] = directories
-		items["3_hidden_files"] = hiddenFiles
-		items["4_files"] = files
+		items["1_directories"]["hidden"] = hiddenDirectories
+		items["1_directories"]["regular"] = directories
+		items["2_symlinks"]["hidden"] = hiddenSymlinks
+		items["2_symlinks"]["regular"] = symlinks
+		items["3_files"]["hidden"] = hiddenFiles
+		items["3_files"]["regular"] = files
 	}
 
 	return items, nil

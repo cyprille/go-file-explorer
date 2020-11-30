@@ -1,13 +1,13 @@
 {{define "body"}}
 	<div class="row">
 		<div class="col-sm-2">
-			<!-- Handles the display of the previous button based on path -->
-			{{if .PreviousEnabled}}
-				<a class="btn btn-outline-secondary folder" href="/api/navigation/{{.Path}}../">
+			<!-- Handles the display of the parent button based on path -->
+			{{if .ParentEnabled}}
+				<a class="btn btn-outline-secondary folder" title="Go back" href="/api/navigation/{{.Path}}../">
 			{{else}}
 				<a class="btn btn-outline-secondary folder disabled" href="/api/navigation/{{.Path}}../">
 			{{end}}
-					<i class="fas fa-chevron-left"></i>&nbsp;Previous
+					<i class="fas fa-chevron-left"></i>&nbsp;Parent
 				</a>
 				<br/><br/>
 		</div>
@@ -19,16 +19,18 @@
 					{{range $i, $breadcrumb := .Breadcrumbs}}
 						{{if eq $i 0}}
 							<span>
-								<a href="/">
+								<a href="/" title="Go to the root directory">
 									<i class="fas fa-folder-open text-warning"></i>&nbsp;~
 								</a>&nbsp;
 							</span>
 						{{end}}
 
-						{{if eq $i $.Depth}}
-							<li class="breadcrumb-item active" aria-current="page">{{$breadcrumb}}</li>
-						{{else}}
-							<li class="breadcrumb-item"><a href="{{index $.BackLinks $i}}">{{$breadcrumb}}</a></li>
+						{{if $.ParentEnabled}}
+							{{if eq $i $.Depth}}
+								<li class="breadcrumb-item active" aria-current="page">{{$breadcrumb}}</li>
+							{{else}}
+								<li class="breadcrumb-item"><a href="{{index $.BackLinks $i}}">{{$breadcrumb}}</a></li>
+							{{end}}							
 						{{end}}
 					{{end}}
 				</ol>
@@ -36,68 +38,106 @@
 			<br/>
 
 			<!-- Loop over the path content items -->
-			{{range $type, $item := .Items}}
+			{{range $type, $elem := .Items}}
 				<!-- Type directory -->
-				{{if eq $type "1_hidden_directories"}}
-					<!-- Loop over directories -->
-					{{range $hiddenDirectory := $item}}
-						<!-- Handles the link generation depending on the path level -->
-						{{if eq $.Path "/" }}
-							<a class="" href="/api/navigation/{{$item}}">
-						{{else}}
-							<a class="" href="/api/navigation/{{$.Path}}{{$hiddenDirectory}}/">
+				{{if eq $type "1_directories"}}
+					{{range $mode, $items := $elem}}
+						{{if eq $mode "hidden"}}
+							<!-- Loop over directories -->
+							{{range $value := $items}}
+								<!-- Handles the link generation depending on the path level -->
+								{{if eq $.Path "/" }}
+									<a class="" href="/api/navigation/{{$value}}">
+								{{else}}
+									<a class="" href="/api/navigation/{{$.Path}}{{$value}}/">
+								{{end}}
+										<i class="fas fa-folder text-secondary"></i>&nbsp;{{$value}}
+									</a>
+									<br/>
+							{{end}}
 						{{end}}
-								<i class="fas fa-folder text-secondary"></i>&nbsp;{{$hiddenDirectory}}
-							</a>
-							<br/>
-					{{end}}
-				{{end}}
-			
-				<!-- Type directory -->
-				{{if eq $type "2_directories"}}
-					<!-- Loop over directories -->
-					{{range $directory := $item}}
-						<!-- Handles the link generation depending on the path level -->
-						{{if eq $.Path "/" }}
-							<a class="" href="/api/navigation/{{$item}}">
-						{{else}}
-							<a class="" href="/api/navigation/{{$.Path}}{{$directory}}/">
+						{{if eq $mode "regular"}}
+							<!-- Loop over directories -->
+							{{range $value := $items}}
+								<!-- Handles the link generation depending on the path level -->
+								{{if eq $.Path "/" }}
+									<a class="" href="/api/navigation/{{$value}}">
+								{{else}}
+									<a class="" href="/api/navigation/{{$.Path}}{{$value}}/">
+								{{end}}
+										<i class="fas fa-folder"></i>&nbsp;{{$value}}
+									</a>
+									<br/>
+							{{end}}
 						{{end}}
-								<i class="fas fa-folder"></i>&nbsp;{{$directory}}
-							</a>
-							<br/>
 					{{end}}
 				{{end}}
 
-				<!-- Type hiddenFile -->
-				{{if eq $type "3_hidden_files"}}
-					<!-- Loop over hiddenFile -->
-					{{range $hiddenFile := $item}}
-						<!-- Handles the link generation depending on the path level -->
-						{{if eq $.Path "/" }}
-							<a class="" href="file://{{$.RootDir}}{{$item}}">
-						{{else}}
-							<a class="" href="file://{{$.RootDir}}{{$.Path}}{{$hiddenFile}}">
+				<!-- Type symlinks -->
+				{{if eq $type "2_symlinks"}}
+					{{range $mode, $items := $elem}}
+						{{if eq $mode "hidden"}}
+							<!-- Loop over symlinks -->
+							{{range $value := $items}}
+								<!-- Handles the link generation depending on the path level -->
+								{{if eq $.Path "/" }}
+									<a class="" href="/api/navigation/{{$value}}">
+								{{else}}
+									<a class="" href="/api/navigation/{{$.Path}}{{$value}}/">
+								{{end}}
+										<i class="fas fa-folder text-warning"></i>&nbsp;{{$value}}
+									</a>
+									<br/>
+							{{end}}
 						{{end}}
-								<i class="fas fa-file text-danger"></i>&nbsp;{{$hiddenFile}}
-							</a>
-							<br/>
+						{{if eq $mode "regular"}}
+							<!-- Loop over symlinks -->
+							{{range $value := $items}}
+								<!-- Handles the link generation depending on the path level -->
+								{{if eq $.Path "/" }}
+									<a class="" href="/api/navigation/{{$value}}">
+								{{else}}
+									<a class="" href="/api/navigation/{{$.Path}}{{$value}}/">
+								{{end}}
+										<i class="fas fa-folder text-danger"></i>&nbsp;{{$value}}
+									</a>
+									<br/>
+							{{end}}
+						{{end}}
 					{{end}}
 				{{end}}
 
-				<!-- Type file -->
-				{{if eq $type "4_files"}}
-					<!-- Loop over files -->
-					{{range $file := $item}}
-						<!-- Handles the link generation depending on the path level -->
-						{{if eq $.Path "/" }}
-							<a class="" href="file://{{$.RootDir}}{{$item}}">
-						{{else}}
-							<a class="" href="file://{{$.RootDir}}{{$.Path}}{{$file}}">
+				<!-- Type files -->
+				{{if eq $type "3_files"}}
+					{{range $mode, $items := $elem}}
+						{{if eq $mode "hidden"}}
+							<!-- Loop over files -->
+							{{range $value := $items}}
+								<!-- Handles the link generation depending on the path level -->
+								{{if eq $.Path "/" }}
+									<a class="" href="/api/navigation/{{$value}}">
+								{{else}}
+									<a class="" href="/api/navigation/{{$.Path}}{{$value}}/">
+								{{end}}
+										<i class="fas fa-folder text-info"></i>&nbsp;{{$value}}
+									</a>
+									<br/>
+							{{end}}
 						{{end}}
-								<i class="fas fa-file text-success"></i>&nbsp;{{$file}}
-							</a>
-							<br/>
+						{{if eq $mode "regular"}}
+							<!-- Loop over files -->
+							{{range $value := $items}}
+								<!-- Handles the link generation depending on the path level -->
+								{{if eq $.Path "/" }}
+									<a class="" href="/api/navigation/{{$value}}">
+								{{else}}
+									<a class="" href="/api/navigation/{{$.Path}}{{$value}}/">
+								{{end}}
+										<i class="fas fa-folder text-success"></i>&nbsp;{{$value}}
+									</a>
+									<br/>
+							{{end}}
+						{{end}}
 					{{end}}
 				{{end}}
 			{{end}}
