@@ -54,12 +54,9 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string]map[string][]
 	}
 
 	// Declares data types
-	hiddenDirectories := []string{}
-	directories := []string{}
-	hiddenSymlinks := []string{}
-	symlinks := []string{}
-	hiddenFiles := []string{}
-	files := []string{}
+	directories := map[string][]string{}
+	symlinks := map[string][]string{}
+	files := map[string][]string{}
 
 	// Loop over content (directories files)
 	for _, c := range content {
@@ -80,9 +77,9 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string]map[string][]
 		if fileInfo.Mode()&os.ModeSymlink == os.ModeSymlink {
 			// Handles the hidden mode of the item
 			if c.Name()[0:1] == "." {
-				hiddenSymlinks = append(hiddenSymlinks, c.Name())
+				symlinks["hidden"] = append(symlinks["hidden"], c.Name())
 			} else {
-				symlinks = append(symlinks, c.Name())
+				symlinks["regular"] = append(symlinks["regular"], c.Name())
 			}
 		} else {
 			// Checks if the target path is a directory or a file
@@ -90,27 +87,24 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string]map[string][]
 			case mode.IsDir():
 				// Handles the hidden mode of the item
 				if c.Name()[0:1] == "." {
-					hiddenDirectories = append(hiddenDirectories, c.Name())
+					directories["hidden"] = append(directories["hidden"], c.Name())
 				} else {
-					directories = append(directories, c.Name())
+					directories["regular"] = append(directories["regular"], c.Name())
 				}
 			case mode.IsRegular():
 				// Handles the hidden mode of the item
 				if c.Name()[0:1] == "." {
-					hiddenFiles = append(hiddenFiles, c.Name())
+					files["hidden"] = append(files["hidden"], c.Name())
 				} else {
-					files = append(files, c.Name())
+					files["regular"] = append(files["regular"], c.Name())
 				}
 			}
 		}
 
 		// Populates the values map
-		items["1_directories"]["hidden"] = hiddenDirectories
-		items["1_directories"]["regular"] = directories
-		items["2_symlinks"]["hidden"] = hiddenSymlinks
-		items["2_symlinks"]["regular"] = symlinks
-		items["3_files"]["hidden"] = hiddenFiles
-		items["3_files"]["regular"] = files
+		items["1_directories"] = directories
+		items["2_symlinks"] = symlinks
+		items["3_files"] = files
 	}
 
 	return items, nil
