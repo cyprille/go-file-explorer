@@ -22,14 +22,19 @@ import (
 
 // SettingsHandler handles the response for the settings page
 func SettingsHandler(rw http.ResponseWriter, req *http.Request) {
+	// Bootstraps the parameters initialization
+	// @TODO: put this in dedicated package
+	initParams()
+
 	switch req.Method {
 	case "GET":
 		// Defines CurrentPage parameter
 		common.CurrentPage = "settings"
 
 		v := map[string]interface{}{
-			"ShowHiddenFiles": ShowHiddenFiles(req),
+			"AppTitle":        appTitle,
 			"CurrentPage":     common.CurrentPage,
+			"ShowHiddenFiles": ShowHiddenFiles(req),
 		}
 
 		// Boostraps the template
