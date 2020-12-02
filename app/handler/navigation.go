@@ -15,7 +15,6 @@ import (
 	"bufio"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -23,8 +22,6 @@ import (
 
 	"go-file-explorer/app/api/filesystem"
 	"go-file-explorer/app/common"
-
-	"github.com/joho/godotenv"
 )
 
 // Page struct to define the template content
@@ -47,21 +44,6 @@ var path = "./"
 
 // Defines if the user can go to the parent or not
 var parentEnabled = false
-
-// at The app title
-var at string
-
-// Initializes the parameters from .env file
-// @TODO: put this in dedicated package
-func initParams() {
-	err := godotenv.Load("./.env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
-	at = os.Getenv("APP_TITLE")
-}
 
 // HomeHandler handles the response from the home path call
 func HomeHandler(rw http.ResponseWriter, req *http.Request) {
@@ -109,10 +91,6 @@ func OpenFileHandler(rw http.ResponseWriter, req *http.Request) {
 
 // navigate displays the content of the given path parameter
 func navigate(rw http.ResponseWriter, req *http.Request, path string) {
-	// Bootstraps the parameters initialization
-	// @TODO: put this in dedicated package
-	initParams()
-
 	// Decode special cars in path
 	decodedPath, err := url.QueryUnescape(path)
 
@@ -157,9 +135,9 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 
 	// Defines the page parameters
 	p := Page{
-		AppTitle:      at,
+		AppTitle:      common.GetParam("APP_TITLE"),
 		Items:         items,
-		RootDir:       filesystem.RootDir,
+		RootDir:       common.GetParam("ROOT_DIR"),
 		Path:          decodedPath,
 		Breadcrumbs:   breadcrumbs,
 		Depth:         depth,

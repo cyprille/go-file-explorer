@@ -12,36 +12,17 @@
 package filesystem
 
 import (
+	"go-file-explorer/app/common"
 	"io/ioutil"
-	"log"
 	"os"
-
-	"github.com/joho/godotenv"
 )
-
-// RootDir is the base directory chroot constant
-var RootDir string
-
-// Initializes the parameters from .env file
-// @TODO: put this in dedicated package
-func initParams() {
-	err := godotenv.Load("./.env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
-	RootDir = os.Getenv("ROOT_DIR")
-}
 
 // GetPathContent Returns the list of files and directories in the given RootDir/path
 func GetPathContent(path string, showHiddenFiles bool) (map[string]map[string][]string, error) {
-	// Bootstraps the parameters initialization
-	// @TODO: put this in dedicated package
-	initParams()
+	rd := common.GetParam("ROOT_DIR")
 
 	// Reads the content of the given path
-	content, err := ioutil.ReadDir(RootDir + path)
+	content, err := ioutil.ReadDir(rd + path)
 	if err != nil {
 		return nil, err
 	}
@@ -66,12 +47,12 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string]map[string][]
 		}
 
 		// Retrieves informations on the target path
-		file, err := os.Stat(RootDir + path + c.Name())
+		file, err := os.Stat(rd + path + c.Name())
 		if err != nil {
 			return nil, err
 		}
 
-		fileInfo, err := os.Lstat(RootDir + path + c.Name())
+		fileInfo, err := os.Lstat(rd + path + c.Name())
 
 		// If the parsed file is a symlink
 		if fileInfo.Mode()&os.ModeSymlink == os.ModeSymlink {
@@ -112,9 +93,5 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string]map[string][]
 
 // RetrieveFilePath Returns the full file path from the RootDir and the given path
 func RetrieveFilePath(path string) string {
-	// Bootstraps the parameters initialization
-	// @TODO: put this in dedicated package
-	initParams()
-
-	return RootDir + path
+	return common.GetParam("ROOT_DIR") + path
 }

@@ -14,9 +14,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 	"time"
 
 	common "go-file-explorer/app/common"
@@ -24,30 +22,10 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
 )
-
-// serverPort is the listening port of the server
-var serverPort string
-
-// Initializes the parameters from .env file
-// @TODO: put this in dedicated package
-func initParams() {
-	err := godotenv.Load("./.env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
-	serverPort = os.Getenv("SERVER_PORT")
-}
 
 // main Boostraps the app
 func main() {
-	// Bootstraps the parameters initialization
-	// @TODO: put this in dedicated package
-	initParams()
-
 	flag.Parse()
 	defer glog.Flush()
 
@@ -63,7 +41,7 @@ func main() {
 	fileServer := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
 	http.Handle("/static/", fileServer)
 
-	err := http.ListenAndServe(":"+serverPort, nil)
+	err := http.ListenAndServe(":"+common.GetParam("SERVER_PORT"), nil)
 
 	if err != nil {
 		fmt.Println(err)
@@ -87,6 +65,5 @@ func httpInterceptor(router http.Handler) http.Handler {
 		case "POST":
 			// We might use http.StatusCreated here
 		}
-
 	})
 }

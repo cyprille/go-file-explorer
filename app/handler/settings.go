@@ -22,17 +22,13 @@ import (
 
 // SettingsHandler handles the response for the settings page
 func SettingsHandler(rw http.ResponseWriter, req *http.Request) {
-	// Bootstraps the parameters initialization
-	// @TODO: put this in dedicated package
-	initParams()
-
 	switch req.Method {
 	case "GET":
 		// Defines CurrentPage parameter
 		common.CurrentPage = "settings"
 
 		v := map[string]interface{}{
-			"AppTitle":        at,
+			"AppTitle":        common.GetParam("APP_TITLE"),
 			"CurrentPage":     common.CurrentPage,
 			"ShowHiddenFiles": GetCookie(req, "show-hidden-files"),
 			"DarkMode":        GetCookie(req, "dark-mode"),
