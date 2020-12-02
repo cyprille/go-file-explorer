@@ -22,7 +22,7 @@ label {
 }
 
 .text-secondary {
-    color: #777 !important;
+    color: #999 !important;
 }
 
 .text-dark {
@@ -31,7 +31,7 @@ label {
 
 a.text-secondary:focus, 
 a.text-secondary:hover {
-    color: #999 !important;
+    color: #CCC !important;
 }
 
 a.text-dark:focus,
