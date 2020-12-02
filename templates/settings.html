@@ -1,16 +1,31 @@
 {{define "body"}}
-	<form method="POST" action="/settings">
-		<div class="form-check">
-			{{if eq .ShowHiddenFiles true}}
-				<input type="checkbox" class="form-check-input" name="show-hidden-files" checked="checked">
-			{{else}}	
-				<input type="checkbox" class="form-check-input" name="show-hidden-files">
-			{{end}}
-			<label class="form-check-label" for="show-hidden-files">
-				&nbsp;Show hidden files
-			</label>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 text-center">
+				<form method="POST" action="/settings">
+					<div class="form-check">
+						<div class="custom-control custom-switch">
+							{{if eq .ShowHiddenFiles true}}
+								<input type="checkbox" class="custom-control-input" id="show-hidden-files-switch" name="show-hidden-files" checked="checked">
+							{{else}}	
+								<input type="checkbox" class="custom-control-input" id="show-hidden-files-switch" name="show-hidden-files">
+							{{end}}
+							<label class="custom-control-label" for="show-hidden-files-switch">Show hiddenfiles</label>
+						</div>
+						<br/>
+						<div class="custom-control custom-switch">
+							{{if eq .DarkMode true}}
+								<input type="checkbox" class="custom-control-input" id="dark-mode-switch" name="dark-mode" checked="checked">
+							{{else}}	
+								<input type="checkbox" class="custom-control-input" id="dark-mode-switch" name="dark-mode">
+							{{end}}
+							<label class="custom-control-label" for="dark-mode-switch">Dark mode</label>
+						</div>
+						<br/><br/>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</div>
+				</form>
+			</div>
 		</div>
-		<br/>
-		<button type="submit" class="btn btn-primary">Submit</button>
-	</form>
+	</div>
 {{end}}

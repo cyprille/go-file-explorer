@@ -1,0 +1,45 @@
+html {
+    background-color: #141526;
+    color: #FFF;
+}
+
+.bg-dark {
+    background-color: #323344 !important;
+}
+
+.breadcrumb {
+    background-color: #1E1F30;
+}
+
+label {
+    color: #FFF;
+}
+
+.btn-outline-secondary,
+.btn-outline-secondary.disabled {
+    color: #CCC;
+    border-color: #CCC;
+}
+
+.text-secondary {
+    color: #777 !important;
+}
+
+.text-dark {
+    color: #CCC !important;
+}
+
+a.text-secondary:focus, 
+a.text-secondary:hover {
+    color: #999 !important;
+}
+
+a.text-dark:focus,
+a.text-dark:hover {
+    color: #FFF !important;
+}
+
+a.text-primary:focus,
+a.text-primary:hover {
+    color: #1E99FF !important;
+}

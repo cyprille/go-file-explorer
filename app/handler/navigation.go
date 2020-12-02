@@ -39,6 +39,7 @@ type Page struct {
 	RealDepth     int
 	ParentEnabled bool
 	CurrentPage   string
+	DarkMode      bool
 }
 
 // Current path
@@ -47,8 +48,8 @@ var path = "./"
 // Defines if the user can go to the parent or not
 var parentEnabled = false
 
-// appTitle The name of the app
-var appTitle string
+// at The app title
+var at string
 
 // Initializes the parameters from .env file
 // @TODO: put this in dedicated package
@@ -59,7 +60,7 @@ func initParams() {
 		log.Fatalf("Error loading .env file")
 	}
 
-	appTitle = os.Getenv("APP_TITLE")
+	at = os.Getenv("APP_TITLE")
 }
 
 // HomeHandler handles the response from the home path call
@@ -123,7 +124,7 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 	}
 
 	// Retrieves the content list
-	items, err := filesystem.GetPathContent(decodedPath, ShowHiddenFiles(req))
+	items, err := filesystem.GetPathContent(decodedPath, GetCookie(req, "show-hidden-files"))
 
 	// If the decodedPath is not found
 	if err != nil {
@@ -156,7 +157,7 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 
 	// Defines the page parameters
 	p := Page{
-		AppTitle:      appTitle,
+		AppTitle:      at,
 		Items:         items,
 		RootDir:       filesystem.RootDir,
 		Path:          decodedPath,
@@ -166,6 +167,7 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 		RealDepth:     realDepth,
 		ParentEnabled: parentEnabled,
 		CurrentPage:   common.CurrentPage,
+		DarkMode:      GetCookie(req, "dark-mode"),
 	}
 
 	// Boostraps the template

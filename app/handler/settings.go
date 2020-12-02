@@ -32,9 +32,10 @@ func SettingsHandler(rw http.ResponseWriter, req *http.Request) {
 		common.CurrentPage = "settings"
 
 		v := map[string]interface{}{
-			"AppTitle":        appTitle,
+			"AppTitle":        at,
 			"CurrentPage":     common.CurrentPage,
-			"ShowHiddenFiles": ShowHiddenFiles(req),
+			"ShowHiddenFiles": GetCookie(req, "show-hidden-files"),
+			"DarkMode":        GetCookie(req, "dark-mode"),
 		}
 
 		// Boostraps the template
@@ -51,40 +52,50 @@ func SettingsHandler(rw http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		// Retrieve the show-hidden-files parameter value
-		showHiddenFilesValue := req.FormValue("show-hidden-files")
-
-		var showHiddenFiles bool
-
-		// Sets the value of the parameter
-		if showHiddenFilesValue == "on" {
-			showHiddenFiles = true
-		} else {
-			showHiddenFiles = false
-		}
-
-		// Stores a cookie for ShowHiddenFiles parameter
-		expiration := time.Now().Add(5 * 365 * 24 * time.Hour)
-		cookie := http.Cookie{Name: "show-hidden-files", Value: strconv.FormatBool(showHiddenFiles), Expires: expiration}
-		http.SetCookie(rw, &cookie)
+		// Retrieves and stores the show-hidden-files and dark-mode cookies
+		setCookie(rw, req, "show-hidden-files")
+		setCookie(rw, req, "dark-mode")
 
 		// Redirects to the parent page
 		http.Redirect(rw, req, req.Header.Get("Referer"), 302)
 	}
 }
 
-// ShowHiddenFiles Returns if the hidden files must be shown
-func ShowHiddenFiles(req *http.Request) bool {
-	// Retrieves the cookie for the parameter ShowHiddenFiles
-	showHiddenFilesCookie, _ := req.Cookie("show-hidden-files")
+// Sets a cookie value in the response
+func setCookie(rw http.ResponseWriter, req *http.Request, name string) {
+	// Inits the default value
+	var c bool = false
 
-	// Returns the default value for showHiddenFiles parameter if there is no defined cookie
-	if showHiddenFilesCookie == nil {
+	// Retrieves the cookie value from the request
+	v := req.FormValue(name)
+
+	// Sets the value of the cookie
+	if v == "on" {
+		c = true
+	}
+
+	// Sets the expiration date for the cookie
+	e := time.Now().Add(5 * 365 * 24 * time.Hour)
+
+	// Defines the cookie values
+	cp := http.Cookie{Name: name, Value: strconv.FormatBool(c), Expires: e}
+
+	// Stores the cookie parameter
+	http.SetCookie(rw, &cp)
+}
+
+// GetCookie Returns if the cookie is activated or not
+func GetCookie(req *http.Request, name string) bool {
+	// Retrieves the cookie parameter
+	c, _ := req.Cookie(name)
+
+	// Returns the default value for parameter if there is no defined cookie
+	if c == nil {
 		return false
 	}
 
 	// Stores the cookie value to a bool type
-	var showHiddenFiles, _ = strconv.ParseBool(showHiddenFilesCookie.Value)
+	var cv, _ = strconv.ParseBool(c.Value)
 
-	return showHiddenFiles
+	return cv
 }
