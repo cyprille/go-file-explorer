@@ -13,11 +13,12 @@ package handler
 
 import (
 	"fmt"
-	"go-file-explorer/app/common"
 	"html/template"
 	"net/http"
 	"strconv"
 	"time"
+
+	"go-file-explorer/app/common"
 )
 
 // SettingsHandler handles the response for the settings page

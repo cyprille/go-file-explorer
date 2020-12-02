@@ -17,8 +17,8 @@ import (
 	"net/http"
 	"time"
 
-	common "go-file-explorer/app/common"
-	handler "go-file-explorer/app/handler"
+	"go-file-explorer/app/common"
+	"go-file-explorer/app/handler"
 
 	"github.com/golang/glog"
 	"github.com/gorilla/mux"

@@ -12,9 +12,10 @@
 package filesystem
 
 import (
-	"go-file-explorer/app/common"
 	"io/ioutil"
 	"os"
+
+	"go-file-explorer/app/common"
 )
 
 // GetPathContent Returns the list of files and directories in the given RootDir/path
