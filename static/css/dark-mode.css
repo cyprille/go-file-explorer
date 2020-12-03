@@ -3,10 +3,6 @@ html {
     color: #FFF;
 }
 
-.bg-dark {
-    background-color: #323344 !important;
-}
-
 .breadcrumb {
     background-color: #1E1F30;
 }
@@ -17,8 +13,8 @@ label {
 
 .btn-outline-secondary,
 .btn-outline-secondary.disabled {
-    color: #CCC;
-    border-color: #CCC;
+    color: #FFF;
+    border-color: #FFF;
 }
 
 .text-secondary {

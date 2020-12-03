@@ -35,3 +35,12 @@
     }
 }
 /* END */
+
+.bg-dark {
+    background-color: #323344 !important;
+    background: #c054ff;
+    background: -moz-linear-gradient(top, #c054ff 0%, #5274ff 100%);
+    background: -webkit-linear-gradient(top, #c054ff 0%, #5274ff 100%);
+    background: linear-gradient(to bottom, #c054ff 0%, #5274ff 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c054ff', endColorstr='#5274ff',GradientType=0 );
+}
