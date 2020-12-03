@@ -36,6 +36,7 @@
 }
 /* END */
 
+/* START: Redefines the navbar colors */
 .bg-dark {
     background-color: #323344 !important;
     background: #c054ff;
@@ -44,3 +45,4 @@
     background: linear-gradient(to bottom, #c054ff 0%, #5274ff 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c054ff', endColorstr='#5274ff',GradientType=0 );
 }
+/* END */
