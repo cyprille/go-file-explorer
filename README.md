@@ -74,7 +74,7 @@ sudo systemctl enable go-file-explorer
 
 # Deploy
 
-### Automated update
+## Automated update
 
 If you want to automatically update the app from the main repository, I suggest the use of the extremely simple [Git-Auto-Deploy](https://github.com/olipo186/Git-Auto-Deploy).
 
