@@ -28,7 +28,9 @@ make install
 
 Fill in the ``.env`` file at the project root with your parameters
 
-## Run the application in development mode
+## Run
+
+### Run the application in development mode
 
 Start the app
 ```bash
@@ -38,7 +40,7 @@ go run main.go
 Then, open your browser and navigate to [http://localhost:SERVER_PORT](http://localhost:SERVER_PORT).
 The ``SERVER_PORT`` variable is the one you defined in the ``.env`` file.
 
-## Run the application in production mode
+### Run the application in production mode
 
 Build the app
 ```bash
@@ -53,7 +55,7 @@ Start the app
 Then, open your browser and navigate to [http://localhost:SERVER_PORT](http://localhost:SERVER_PORT).
 The ``SERVER_PORT`` variable is the one you defined in the ``.env`` file.
 
-## Set the application as a background service
+### Set the application as a background service
 
 Copy the service file to your systemd
 ```bash
@@ -70,6 +72,17 @@ Run the following command to auto start the service on boot
 sudo systemctl enable go-file-explorer
 ```
 
-## Automated update
+# Deploy
+
+### Automated update
 
 If you want to automatically update the app from the main repository, I suggest the use of the extremely simple [Git-Auto-Deploy](https://github.com/olipo186/Git-Auto-Deploy).
+
+# Contributions
+
+Feel free to open an issue on the repository if you face some difficulties.
+Contributions are also quite welcomed by opening pull requests.
+
+# Licence
+
+This project is licended under the MIT licence.
