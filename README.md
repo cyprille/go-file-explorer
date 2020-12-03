@@ -1,15 +1,15 @@
 # Go File Explorer
 
-## Introduction
+# Introduction
 
 This tool provides you a very lightweight interface to navigate through a file system.
 It was developed to provide a UI to a NAS project running on a Raspberry Pi.
 
-## Prerequisite
+# Prerequisite
 
 - [Golang](https://golang.org/dl/) with a working workspace (GOPATH, GOROOT...)
 
-## Installation
+# Installation
 
 Clone the repository in your Gopath (usually $GOPATH/src/)
 ```bash
@@ -28,9 +28,9 @@ make install
 
 Fill in the ``.env`` file at the project root with your parameters
 
-## Run
+# Run
 
-### Run the application in development mode
+## Run the application in development mode
 
 Start the app
 ```bash
@@ -40,7 +40,7 @@ go run main.go
 Then, open your browser and navigate to [http://localhost:SERVER_PORT](http://localhost:SERVER_PORT).
 The ``SERVER_PORT`` variable is the one you defined in the ``.env`` file.
 
-### Run the application in production mode
+## Run the application in production mode
 
 Build the app
 ```bash
@@ -55,7 +55,7 @@ Start the app
 Then, open your browser and navigate to [http://localhost:SERVER_PORT](http://localhost:SERVER_PORT).
 The ``SERVER_PORT`` variable is the one you defined in the ``.env`` file.
 
-### Set the application as a background service
+## Set the application as a background service
 
 Copy the service file to your systemd
 ```bash
