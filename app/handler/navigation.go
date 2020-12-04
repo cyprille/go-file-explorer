@@ -64,6 +64,9 @@ func PathHandler(rw http.ResponseWriter, req *http.Request) {
 }
 
 // OpenFileHandler Opens the file from the rootDir and the given path
+// @TODO: Fixbug for file opening in some special conditions (spaces in name, accented caracters...)
+// @TODO: Fixbug for file name and file extension not applied on downloaded file
+// @TODO: Fixbug remove trailing slash at the path's end for files opening
 func OpenFileHandler(rw http.ResponseWriter, req *http.Request) {
 	// Defines CurrentPage parameter
 	common.CurrentPage = "file"
