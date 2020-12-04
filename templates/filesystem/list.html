@@ -110,17 +110,17 @@
 							{{if eq $mode "hidden"}}
 								<!-- Handles the link generation depending on the path level -->
 								{{if eq $.Path "/" }}
-									<a class="text-secondary" href="/api/navigation/{{$value}}">
+									<a class="text-secondary" target="_blank" href="/api/open/{{$value}}">
 								{{else}}
-									<a class="text-secondary" href="/api/navigation/{{$.Path}}{{$value}}/">
+									<a class="text-secondary" target="_blank" href="/api/open/{{$.Path}}{{$value}}/">
 								{{end}}
 								<i class="fas fa-file text-success"></i>&nbsp;{{$value}}
 							{{else}}
 								<!-- Handles the link generation depending on the path level -->
 								{{if eq $.Path "/" }}
-									<a class="text-dark" href="/api/navigation/{{$value}}">
+									<a class="text-dark" target="_blank" href="/api/open/{{$value}}">
 								{{else}}
-									<a class="text-dark" href="/api/navigation/{{$.Path}}{{$value}}/">
+									<a class="text-dark" target="_blank" href="/api/open/{{$.Path}}{{$value}}/">
 								{{end}}
 								<i class="fas fa-file text-success"></i>&nbsp;{{$value}}
 							{{end}}

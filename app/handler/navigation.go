@@ -12,12 +12,9 @@
 package handler
 
 import (
-	"bufio"
-	"fmt"
 	"html/template"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 
 	"go-file-explorer/app/api/filesystem"
@@ -67,7 +64,6 @@ func PathHandler(rw http.ResponseWriter, req *http.Request) {
 }
 
 // OpenFileHandler Opens the file from the rootDir and the given path
-// @TODO: Refacto this to handle the content's display with a stream
 func OpenFileHandler(rw http.ResponseWriter, req *http.Request) {
 	// Defines CurrentPage parameter
 	common.CurrentPage = "file"
@@ -78,15 +74,7 @@ func OpenFileHandler(rw http.ResponseWriter, req *http.Request) {
 	// Retrieves the full file path from the filestystem
 	filePath := filesystem.RetrieveFilePath(path)
 
-	f, _ := os.Open(filePath)
-	scanner := bufio.NewScanner(f)
-
-	// Loop over all lines in the file and print them.
-	for scanner.Scan() {
-		line := scanner.Text()
-
-		fmt.Println(line)
-	}
+	http.ServeFile(rw, req, filePath)
 }
 
 // navigate displays the content of the given path parameter
