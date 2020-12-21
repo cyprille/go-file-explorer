@@ -97,11 +97,18 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 
 	// If the decodedPath is not found
 	if err != nil {
+		// Defines the basic page parameters
+		p := Page{
+			AppTitle:      common.GetParam("APP_TITLE"),
+			CurrentPage:   common.CurrentPage,
+			DarkMode:      GetCookie(req, "dark-mode"),
+		}
+		
 		// Boostraps the template
 		common.Templates = template.Must(template.ParseFiles("templates/filesystem/404.html", common.LayoutPath))
 
 		// Renders the 404 error template
-		err := common.Templates.ExecuteTemplate(rw, "base", nil)
+		err := common.Templates.ExecuteTemplate(rw, "base", p)
 		common.CheckError(err, 2)
 
 		return
