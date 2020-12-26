@@ -66,25 +66,24 @@ func PathHandler(rw http.ResponseWriter, req *http.Request) {
 
 // OpenFileHandler Opens the file from the rootDir and the given path
 func OpenFileHandler(rw http.ResponseWriter, req *http.Request) {
-	// Defines CurrentPage parameter
-	common.CurrentPage = "file"
-
 	// Retrieves the link by removing the "/api/navigation/" prefix
 	path = strings.TrimPrefix(req.RequestURI, "/api/open/")
 
+	// Decodes the file name for accented characters
+	decodedPath, _ := url.QueryUnescape(path)
+
 	// Retrieves the full file path from the filestystem
-	filePath := strings.ReplaceAll(filesystem.RetrieveFilePath(path), "%20", " ")
+	filePath := filesystem.RetrieveFilePath(decodedPath)
 
 	// Removes the trailing "/"
-	fileName := strings.ReplaceAll(strings.TrimSuffix(path, "/"), "%20", " ")
+	fileName := strings.TrimSuffix(decodedPath, "/")
 
 	// Trims the file's path prefix
-	rgx := regexp.MustCompile(`(.)+/(?P<end>[^/]+)`)
+	rgx := regexp.MustCompile(`(.)+/(?P<filename>[^/]+)`)
 	finalFileName := rgx.FindStringSubmatch(fileName)
-	endIndex := rgx.SubexpIndex("end")
 
 	// Defines header for the filename
-	rw.Header().Set("Content-Disposition", "attachment; filename="+finalFileName[endIndex])
+	rw.Header().Set("Content-Disposition", "attachment; filename="+finalFileName[rgx.SubexpIndex("filename")])
 
 	// Serves the file to the client
 	http.ServeFile(rw, req, filePath)
@@ -107,21 +106,7 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 
 	// If the decodedPath is not found
 	if err != nil {
-		// Defines the basic page parameters
-		p := Page{
-			AppTitle:    common.GetParam("APP_TITLE"),
-			CurrentPage: common.CurrentPage,
-			DarkMode:    GetCookie(req, "dark-mode"),
-		}
-
-		// Boostraps the template
-		common.Templates = template.Must(template.ParseFiles("templates/filesystem/404.html", common.LayoutPath))
-
-		// Renders the 404 error template
-		err := common.Templates.ExecuteTemplate(rw, "base", p)
-		common.CheckError(err, 2)
-
-		return
+		displayNavigationError(rw, req)
 	}
 
 	// Generates values for breadcrumbs display
@@ -162,4 +147,23 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 	// Renders the template
 	err = common.Templates.ExecuteTemplate(rw, "base", p)
 	common.CheckError(err, 2)
+}
+
+// displayNavigationError Displays a 404 navigation error
+func displayNavigationError(rw http.ResponseWriter, req *http.Request) {
+	// Defines the basic page parameters
+	p := Page{
+		AppTitle:    common.GetParam("APP_TITLE"),
+		CurrentPage: common.CurrentPage,
+		DarkMode:    GetCookie(req, "dark-mode"),
+	}
+
+	// Boostraps the template
+	common.Templates = template.Must(template.ParseFiles("templates/filesystem/404.html", common.LayoutPath))
+
+	// Renders the 404 error template
+	err := common.Templates.ExecuteTemplate(rw, "base", p)
+	common.CheckError(err, 2)
+
+	return
 }
