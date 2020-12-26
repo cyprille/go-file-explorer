@@ -48,7 +48,7 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string]map[string][]
 		sortContent(rd, path, c)
 	}
 
-	// Init and opulates the values map
+	// Init and populates the values map
 	items := map[string]map[string][]string{
 		"1_directories": directories,
 		"2_symlinks":    symlinks,
