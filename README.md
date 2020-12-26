@@ -1,5 +1,10 @@
 # Go File Explorer
 
+![status](https://github.com/cyprille/go-file-explorer/workflows/status/badge.svg)
+[![Release](https://img.shields.io/github/release/cyprille/go-file-explorer.svg)](https://github.com/cyprille/go-file-explorer/releases/latest)
+[![License](https://img.shields.io/github/license/cyprille/go-file-explorer)](/LICENSE)
+[![Github Releases Stats of golangci-lint](https://img.shields.io/github/downloads/cyprille/go-file-explorer/total.svg?logo=github)](https://somsubhra.com/github-release-stats/?username=cyprille&repository=go-file-explorer)
+
 ## Introduction
 
 This tool provides you a very lightweight interface to navigate through a file system.
