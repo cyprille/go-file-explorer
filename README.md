@@ -78,11 +78,16 @@ sudo systemctl enable go-file-explorer
 
 If you want to automatically update the app from the main repository, I suggest the use of the extremely simple [Git-Auto-Deploy](https://github.com/olipo186/Git-Auto-Deploy).
 
-# Contributions
+# Code of conduct
 
-Feel free to open an issue on the repository if you face some difficulties.
-Contributions are also quite welcomed by opening pull requests.
+[See CODE_OF_CONDUCT.md](https://github.com/cyprille/go-file-explorer/blob/master/CODE_OF_CONDUCT.md)
+
+# Contributing
+
+[See CONTRIBUTING.md](https://github.com/cyprille/go-file-explorer/blob/master/CONTRIBUTING.md)
 
 # Licence
 
 This project is licended under the MIT licence.
+
+[See LICENCE.md](https://github.com/cyprille/go-file-explorer/blob/master/LICENSE.md)
