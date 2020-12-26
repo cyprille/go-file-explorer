@@ -15,6 +15,7 @@ import (
 	"html/template"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 
 	"go-file-explorer/app/api/filesystem"
@@ -64,9 +65,6 @@ func PathHandler(rw http.ResponseWriter, req *http.Request) {
 }
 
 // OpenFileHandler Opens the file from the rootDir and the given path
-// @TODO: Fixbug for file opening in some special conditions (spaces in name, accented caracters...)
-// @TODO: Fixbug for file name and file extension not applied on downloaded file
-// @TODO: Fixbug remove trailing slash at the path's end for files opening
 func OpenFileHandler(rw http.ResponseWriter, req *http.Request) {
 	// Defines CurrentPage parameter
 	common.CurrentPage = "file"
@@ -75,8 +73,20 @@ func OpenFileHandler(rw http.ResponseWriter, req *http.Request) {
 	path = strings.TrimPrefix(req.RequestURI, "/api/open/")
 
 	// Retrieves the full file path from the filestystem
-	filePath := filesystem.RetrieveFilePath(path)
+	filePath := strings.ReplaceAll(filesystem.RetrieveFilePath(path), "%20", " ")
 
+	// Removes the trailing "/"
+	fileName := strings.ReplaceAll(strings.TrimSuffix(path, "/"), "%20", " ")
+
+	// Trims the file's path prefix
+	rgx := regexp.MustCompile(`(.)+/(?P<end>[^/]+)`)
+	finalFileName := rgx.FindStringSubmatch(fileName)
+	endIndex := rgx.SubexpIndex("end")
+
+	// Defines header for the filename
+	rw.Header().Set("Content-Disposition", "attachment; filename="+finalFileName[endIndex])
+
+	// Serves the file to the client
 	http.ServeFile(rw, req, filePath)
 }
 
@@ -99,11 +109,11 @@ func navigate(rw http.ResponseWriter, req *http.Request, path string) {
 	if err != nil {
 		// Defines the basic page parameters
 		p := Page{
-			AppTitle:      common.GetParam("APP_TITLE"),
-			CurrentPage:   common.CurrentPage,
-			DarkMode:      GetCookie(req, "dark-mode"),
+			AppTitle:    common.GetParam("APP_TITLE"),
+			CurrentPage: common.CurrentPage,
+			DarkMode:    GetCookie(req, "dark-mode"),
 		}
-		
+
 		// Boostraps the template
 		common.Templates = template.Must(template.ParseFiles("templates/filesystem/404.html", common.LayoutPath))
 
