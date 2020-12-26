@@ -18,8 +18,18 @@ import (
 	"go-file-explorer/app/common"
 )
 
+// Init vars
+var symlinks map[string][]string
+var directories map[string][]string
+var files map[string][]string
+
 // GetPathContent Returns the list of files and directories in the given RootDir/path
 func GetPathContent(path string, showHiddenFiles bool) (map[string]map[string][]string, error) {
+	// Declares data types
+	symlinks = map[string][]string{}
+	directories = map[string][]string{}
+	files = map[string][]string{}
+
 	rd := common.GetParam("ROOT_DIR")
 
 	// Reads the content of the given path
@@ -28,18 +38,6 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string]map[string][]
 		return nil, err
 	}
 
-	// Init the arrays of data
-	items := map[string]map[string][]string{
-		"1_directories": {},
-		"2_symlinks":    {},
-		"3_files":       {},
-	}
-
-	// Declares data types
-	directories := map[string][]string{}
-	symlinks := map[string][]string{}
-	files := map[string][]string{}
-
 	// Loop over content (directories files)
 	for _, c := range content {
 		// Jumps the iteration if we won't show hidden files and if the file is an hidden one
@@ -47,49 +45,67 @@ func GetPathContent(path string, showHiddenFiles bool) (map[string]map[string][]
 			continue
 		}
 
-		// Retrieves informations on the target path
-		file, err := os.Stat(rd + path + c.Name())
-		if err != nil {
-			return nil, err
-		}
+		sortContent(rd, path, c)
+	}
 
-		fileInfo, err := os.Lstat(rd + path + c.Name())
-
-		// If the parsed file is a symlink
-		if fileInfo.Mode()&os.ModeSymlink == os.ModeSymlink {
-			// Handles the hidden mode of the item
-			if c.Name()[0:1] == "." {
-				symlinks["hidden"] = append(symlinks["hidden"], c.Name())
-			} else {
-				symlinks["regular"] = append(symlinks["regular"], c.Name())
-			}
-		} else {
-			// Checks if the target path is a directory or a file
-			switch mode := file.Mode(); {
-			case mode.IsDir():
-				// Handles the hidden mode of the item
-				if c.Name()[0:1] == "." {
-					directories["hidden"] = append(directories["hidden"], c.Name())
-				} else {
-					directories["regular"] = append(directories["regular"], c.Name())
-				}
-			case mode.IsRegular():
-				// Handles the hidden mode of the item
-				if c.Name()[0:1] == "." {
-					files["hidden"] = append(files["hidden"], c.Name())
-				} else {
-					files["regular"] = append(files["regular"], c.Name())
-				}
-			}
-		}
-
-		// Populates the values map
-		items["1_directories"] = directories
-		items["2_symlinks"] = symlinks
-		items["3_files"] = files
+	// Init and opulates the values map
+	items := map[string]map[string][]string{
+		"1_directories": directories,
+		"2_symlinks":    symlinks,
+		"3_files":       files,
 	}
 
 	return items, nil
+}
+
+// sortContent Sorts content depending on items types
+func sortContent(rd string, path string, c os.FileInfo) (bool, error) {
+	// Retrieves informations on the target path
+	file, err := os.Stat(rd + path + c.Name())
+	if err != nil {
+		return false, err
+	}
+
+	// Retrieves the file information
+	fileInfo, err := os.Lstat(rd + path + c.Name())
+
+	// Checks if the parsed item is a symlink
+	if fileInfo.Mode()&os.ModeSymlink == os.ModeSymlink {
+		storeContent("symlinks", c.Name())
+	} else {
+		// Checks if the parsed item is a directory or a file
+		switch mode := file.Mode(); {
+		case mode.IsDir():
+			storeContent("directories", c.Name())
+		case mode.IsRegular():
+			storeContent("files", c.Name())
+		}
+	}
+
+	return true, nil
+}
+
+// storeContent Stores the content value depending on the item mode
+func storeContent(m string, v string) {
+	// Array container
+	var ac map[string][]string
+
+	// Handles the mode of the item
+	switch m {
+	case "symlinks":
+		ac = symlinks
+	case "directories":
+		ac = directories
+	case "files":
+		ac = files
+	}
+
+	// Dispatches the item depending on the item's visibility
+	if v[0:1] == "." {
+		ac["hidden"] = append(ac["hidden"], v)
+	} else {
+		ac["regular"] = append(ac["regular"], v)
+	}
 }
 
 // RetrieveFilePath Returns the full file path from the RootDir and the given path
