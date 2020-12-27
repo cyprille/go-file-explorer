@@ -22,12 +22,12 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Get dependencies
-      run: |
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
+      run: make install
+        #go get -v -t -d ./...
+        #if [ -f Gopkg.toml ]; then
+        #    curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+        #    dep ensure
+        #fi
         
     - name: Run vet & lint
       run: |
