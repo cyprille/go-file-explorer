@@ -27,26 +27,26 @@ jobs:
     - name: Debug
       run: |
         pwd
+        echo ${HOME}
+        echo ${GITHUB_WORKSPACE}
         echo ${GOPATH}
         echo ${GOROOT}
-        go version
-        go env
+      env:
+        GOPATH: /home/runner/work/go-file-explorer/go
 
     - name: Get dependencies
       run: make install
-        #go get -v -t -d ./...
-        #if [ -f Gopkg.toml ]; then
-        #    curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-        #    dep ensure
-        #fi
+      env:
+        GOPATH: /home/runner/work/go-file-explorer/go
         
     - name: Run vet & lint
       run: |
         go vet .
         golint .
+      env:
+        GOPATH: /home/runner/work/go-file-explorer/go
 
     - name: Build
       run: go build -v ./...
-
-    - name: Test
-      run: go test -v ./...
+      env:
+        GOPATH: /home/runner/work/go-file-explorer/go
