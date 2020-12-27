@@ -22,7 +22,7 @@ jobs:
       uses: actions/checkout@v1
       with:
         fetch-depth: 1
-        path: go/src/github.com/cyprille/go-file-explorer
+        path: go/src/go-file-explorer
     
     - name: Debug
       run: |
